@@ -30,3 +30,11 @@ pub struct PollOption {
     pub title_length: u8,
     pub votes: u64,
 }
+
+#[account]
+pub struct PollVoter {
+    pub is_initialized: bool,
+    pub poll_id: u8,
+    pub option_selected: u8,
+    pub bump: u8,
+}
