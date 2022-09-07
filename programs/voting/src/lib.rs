@@ -19,11 +19,28 @@ pub mod voting {
         };
 
         ctx.accounts.count_data.set_inner(count_data);
+
         Ok(())
     }
 
-    pub fn create_poll(ctx: Context<CreatePoll>) -> Result<()> {
+    pub fn create_poll(
+        ctx: Context<CreatePoll>,
+        title: String,
+        options: Vec<PollOption>,
+        bump: u8,
+    ) -> Result<()> {
         let count_data = &mut ctx.accounts.count_data;
+        count_data.proposal_count += 1;
+
+        let poll = &mut ctx.accounts.poll;
+        let new_poll = Poll {
+            id: count_data.proposal_count,
+            title,
+            options: options.clone(),
+            options_count: options.len() as u8,
+            bump, 
+        };
+        poll.set_inner(new_poll);
 
         Ok(())
     }

@@ -14,13 +14,15 @@ impl PollCount {
 
 #[account]
 pub struct Poll {
-    pub is_initialized: bool,
     pub id: u8,
     pub title: String,
-    pub title_length: u8,
-    pub options: Vec<PollOption>,
+    pub options: Vec<PollOption>, // max: 4 options
     pub options_count: u8,
     pub bump: u8,
+}
+
+impl Poll {
+    pub const LEN: usize = 8 + 1 + 4 + (280 * 4) + 1 + 4 + (PollOption::LEN * 4) + 1 + 1;
 }
 
 #[account]
@@ -29,6 +31,10 @@ pub struct PollOption {
     pub title: String,
     pub title_length: u8,
     pub votes: u64,
+}
+
+impl PollOption {
+    const LEN: usize = 8 + 1 + 280 * 4 + 1 + 8;
 }
 
 #[account]
