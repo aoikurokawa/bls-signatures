@@ -14,3 +14,29 @@ pub mod voting {
 
 #[derive(Accounts)]
 pub struct Initialize {}
+
+#[account]
+pub struct PollCount {
+    pub is_initialized: bool,
+    pub count: u8,
+    pub bump: u8,
+}
+
+#[account]
+pub struct Poll {
+    pub is_initialized: bool,
+    pub id: u8,
+    pub title: String,
+    pub title_length: u8,
+    pub options: Vec<PollOption>,
+    pub options_count: u8,
+    pub bump: u8,
+}
+
+#[account]
+pub struct PollOption {
+    pub id: u8,
+    pub title: String,
+    pub title_length: u8,
+    pub votes: u64,
+}
