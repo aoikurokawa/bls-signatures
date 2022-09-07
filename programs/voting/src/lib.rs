@@ -19,7 +19,6 @@ pub mod voting {
         };
 
         ctx.accounts.count_data.set_inner(count_data);
-
         Ok(())
     }
 
