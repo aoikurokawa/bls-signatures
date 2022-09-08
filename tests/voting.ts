@@ -12,14 +12,23 @@ describe("voting", () => {
 
   const program = anchor.workspace.Voting as Program<Voting>;
 
-  it("Initialized governor", async () => {
-    const [countDataPda, bump] = await PublicKey.findProgramAddress(
+  let countDataPda: PublicKey;
+  let countDatabump: number;
+
+  beforeEach(async () => {
+    const [pda, bump] = await PublicKey.findProgramAddress(
       [anchor.utils.bytes.utf8.encode("my_khe_governor")],
       programID
     );
+
+    countDataPda = pda;
+    countDatabump = bump;
+  })
+
+  it("Initialized governor", async () => {
     
     await program.methods
-      .initialize(bump)
+      .initialize(countDatabump)
       .accounts({
         countData: countDataPda,
         payer: provider.wallet.publicKey,
@@ -29,7 +38,11 @@ describe("voting", () => {
 
     const account = await program.account.pollCount.fetch(countDataPda);
 
-    expect(account.bump).to.equal(bump);
+    expect(account.bump).to.equal(countDatabump);
     expect(account.proposalCount).to.equal(0);
   });
+
+  it("Create dummy poll", async () => {
+
+  })
 });
