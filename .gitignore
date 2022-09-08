@@ -8,4 +8,7 @@ test-ledger
 .yarn
 
 # Generated IDL types
+artifacts/
+dist/
+src/idls
 src/idl
