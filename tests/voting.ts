@@ -3,6 +3,7 @@ import { Program } from "@project-serum/anchor";
 import { Voting } from "../target/types/voting";
 import { PublicKey } from "@solana/web3.js";
 import { programID } from "../src/utils";
+import { expect } from "chai";
 
 describe("voting", () => {
   // Configure the client to use the local cluster.
@@ -26,6 +27,13 @@ describe("voting", () => {
       .rpc();
 
     console.log("Your transaction signature", tx);
+
+    const account = await program.account.pollCount.fetch(countDataPda);
+    console.log("Proposal count", account.proposalCount);
+    console.log("bump", account.bump);
+    
+    expect(account.bump).to.equal(bump);
+    expect(account.proposalCount).to.equal(0);
 
   });
 });
