@@ -39,7 +39,7 @@ impl PollOption {
 
 #[account]
 pub struct Vote {
-    pub poll_id: u8,
+    pub poll: Pubkey,
     pub voter: Pubkey,
     pub option_selected: u8,
     pub bump: u8,

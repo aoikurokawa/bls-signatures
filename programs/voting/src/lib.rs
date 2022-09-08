@@ -45,7 +45,18 @@ pub mod voting {
         Ok(())
     }
 
-    pub fn vote_poll(ctx: Context<VotePoll>) -> Result<()> {
+    pub fn vote_poll(ctx: Context<VotePoll>, bump: u8, voter: Pubkey, option: u8) -> Result<()> {
+        let vote = &mut ctx.accounts.vote;
+        let new_vote = Vote {
+            poll: ctx.accounts.poll.key(),
+            voter,
+            option_selected: option,
+            bump 
+        };
+
+        vote.set_inner(new_vote);
+
+
         Ok(())
     }
 }
