@@ -3,7 +3,7 @@ use anchor_lang::{prelude::*, solana_program::pubkey::PUBKEY_BYTES};
 #[account]
 pub struct PollCount {
     /// The total number of proposal
-    pub proposal_count: u8,
+    pub proposal_count: u64,
     /// Bump
     pub bump: u8,
 }
@@ -14,7 +14,7 @@ impl PollCount {
 
 #[account]
 pub struct Poll {
-    pub id: u8,
+    pub id: u64,
     pub title: String,
     pub options: Vec<PollOption>, // max: 4 options
     pub options_count: u8,
