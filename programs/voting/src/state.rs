@@ -25,7 +25,7 @@ impl Poll {
     pub const LEN: usize = 8 + 1 + 4 + (280 * 4) + 1 + 4 + (PollOption::LEN * 4) + 1 + 1;
 }
 
-#[account]
+#[derive(AnchorSerialize, AnchorDeserialize, Clone, Debug)]
 pub struct PollOption {
     pub id: u8,
     pub title: String,

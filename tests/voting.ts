@@ -26,5 +26,6 @@ describe("voting", () => {
       .rpc();
 
     console.log("Your transaction signature", tx);
+
   });
 });
