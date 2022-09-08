@@ -13,6 +13,9 @@ export const MYKHE_ADDRESS = {
   Voting: new PublicKey(idl.metadata.address),
 };
 
+/**
+ * Program IDLs
+ */
 export const MYKHE_IDLS = {
   Voting: VotingJSON,
 };
