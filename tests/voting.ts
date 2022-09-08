@@ -12,12 +12,13 @@ describe("voting", () => {
 
   const program = anchor.workspace.Voting as Program<Voting>;
 
-  it("Is initialized!", async () => {
+  it("Initialized governor", async () => {
     const [countDataPda, bump] = await PublicKey.findProgramAddress(
       [anchor.utils.bytes.utf8.encode("my_khe_governor")],
       programID
     );
-    const tx = await program.methods
+    
+    await program.methods
       .initialize(bump)
       .accounts({
         countData: countDataPda,
@@ -26,14 +27,9 @@ describe("voting", () => {
       })
       .rpc();
 
-    console.log("Your transaction signature", tx);
-
     const account = await program.account.pollCount.fetch(countDataPda);
-    console.log("Proposal count", account.proposalCount);
-    console.log("bump", account.bump);
-    
+
     expect(account.bump).to.equal(bump);
     expect(account.proposalCount).to.equal(0);
-
   });
 });
