@@ -3,14 +3,14 @@ seeds = false
 
 [scripts]
 test = "yarn run ts-mocha -p ./tsconfig.json -t 1000000 tests/**/*.ts"
-copy = ""
+copy = "cp -r ./target/idl ./src/"
 
 [provider]
 cluster = "localnet"
-wallet = "/Users/aoikurokawa/.config/solana/id.json"
+wallet = "~/.config/solana/id.json"
 
 [programs.localnet]
-voting = "Fg6PaFpoGXkYsidMpWTK6W2BeZ7FEfcYkg476zPFsLnS"
+voting = "AAFLi32KG5XDdfcJUEjHnQFCghQfusX4pbqtYaivv7DE"
 
 [registry]
 url = "https://anchor.projectserum.com"
