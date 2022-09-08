@@ -1,4 +1,3 @@
-import type { AccountMeta } from "@solana/web3.js";
 import type { AnchorTypes } from "@saberhq/anchor-contrib";
 
 import type { VotingIDL } from "../idls/voting";
