@@ -38,9 +38,13 @@ impl PollOption {
 }
 
 #[account]
-pub struct PollVoter {
-    pub is_initialized: bool,
+pub struct Vote {
     pub poll_id: u8,
+    pub voter: Pubkey,
     pub option_selected: u8,
     pub bump: u8,
+}
+
+impl Vote {
+    pub const LEN: usize = 8 + 1 + PUBKEY_BYTES + 1 + 1;
 }
