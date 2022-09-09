@@ -39,9 +39,13 @@ impl PollOption {
 
 #[account]
 pub struct Vote {
+    ///  The poll being voted on
     pub poll: Pubkey,
+    /// The voter
     pub voter: Pubkey,
+    /// The side of the vote taken
     pub option_selected: u8,
+    /// Bump seed
     pub bump: u8,
 }
 

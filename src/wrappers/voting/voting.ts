@@ -54,34 +54,33 @@ export class PollCountDataWrapper {
    * Creates a new poll
    * @returns
    */
-  //   async createProposal({
-  //     proposer = this.sdk.provider.wallet.publicKey,
-  //   }: {
-  //     proposer?: PublicKey;
-  //   }) {
-  //     const { provider } = this.sdk;
+  async createProposal({
+    proposer = this.sdk.provider.wallet.publicKey,
+  }: {
+    proposer?: PublicKey;
+  }) {
+    const { provider } = this.sdk;
 
-  //     const pollCountData = await this.reload();
-  //     const index = new u64(pollCountData.proposalCount);
-  //     const [poll, bump] = await findPollAddress(index);
+    const pollCountData = await this.reload();
+    const index = new u64(pollCountData.proposalCount);
+    const [poll, bump] = await findPollAddress(index);
 
-  //     const ixs: TransactionInstruction[] = [];
+    const ixs: TransactionInstruction[] = [];
 
-  //     ixs.push(
-  //       this.sdk.program.Voting.instruction.createPoll("Dummy Poll", {
-  //         accounts: {
-  //           countData: this.pollCountKey,
-  //           poll: poll,
-  //           payer: provider.wallet.publicKey,
-  //           systemProgram: SystemProgram.programId,
-  //         },
-  //       })
-  //     );
+    ixs.push(
+      this.sdk.program.Voting.instruction.createPoll("Dummy Poll", {
+        accounts: {
+          countData: this.pollCountKey,
+          poll: poll,
+          payer: provider.wallet.publicKey,
+          systemProgram: SystemProgram.programId,
+        },
+      })
+    );
 
-  //     return {
-  //         poll,
-  //         index,
-
-  //     }
-  //   }
+    return {
+      poll,
+      index,
+    };
+  }
 }
