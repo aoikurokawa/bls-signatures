@@ -1,11 +1,18 @@
 import { TransactionEnvelope } from "@saberhq/solana-contrib";
-import {PublicKey} from "@solana/web3.js";
+import { PublicKey } from "@solana/web3.js";
 import BN from "bn.js";
 
+import { VotingWrapper } from "./voting";
+
+export type PendingGovernor = {
+  wrapper: VotingWrapper;
+  tx: TransactionEnvelope;
+};
+
 export type Poll = {
-  poll: PublicKey,
-  index: BN,
-  tx: TransactionEnvelope
+  poll: PublicKey;
+  index: BN;
+  tx: TransactionEnvelope;
 };
 
 /**

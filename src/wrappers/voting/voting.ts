@@ -2,16 +2,17 @@ import {
   PublicKey,
   TransactionInstruction,
   SystemProgram,
+  Keypair,
 } from "@solana/web3.js";
 import type BN from "bn.js";
 import { u64 } from "@saberhq/token-utils";
 
 import { PollCountData, PollData } from "../../programs/voting";
 import { MyKheSDK } from "../../sdk";
-import { findPollAddress } from "./pda";
+import { findGovernorAddress, findPollAddress } from "./pda";
 import { Poll } from "./types";
 
-export class PollCountDataWrapper {
+export class VotingWrapper {
   private _pollCount: PollCountData | null = null;
 
   constructor(readonly sdk: MyKheSDK, readonly pollCountKey: PublicKey) {}

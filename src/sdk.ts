@@ -25,18 +25,18 @@ export class MyKheSDK {
    * @param signer
    * @returns
    */
-//   withSigner(signer: Signer): MyKheSDK {
-//     return MyKheSDK.load({
-//       provider: this.provider.withSigner(signer),
-//     });
-//   }
+  withSigner(signer: Signer): MyKheSDK {
+    return MyKheSDK.load({
+      provider: this.provider.withSigner(signer),
+    });
+  }
 
   /**
    *  laods the SDK 
-   * @param param0 
+   * @param provider 
    * @returns 
    */
-  load({ provider }: { provider: Provider }): MyKheSDK {
+  static load({ provider }: { provider: Provider }): MyKheSDK {
     const programs: MyKhePrograms = newProgramMap<MyKhePrograms>(
       provider,
       MYKHE_IDLS,

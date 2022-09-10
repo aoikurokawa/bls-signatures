@@ -1,37 +1,31 @@
 import * as anchor from "@project-serum/anchor";
 import { Program } from "@project-serum/anchor";
-import { Voting } from "../target/types/voting";
 import { PublicKey } from "@solana/web3.js";
-import { programID } from "../src/constants";
 import { expect } from "chai";
 
-describe("voting", () => {
-  // Configure the client to use the local cluster.
-  const provider = anchor.AnchorProvider.env();
-  anchor.setProvider(provider);
+import { Voting } from "../target/types/voting";
+import { MYKHE_ADDRESS } from "../src/constants";
+import { makeSDK } from "./workspace";
+import { VotingWrapper } from "../src";
 
-  const program = anchor.workspace.Voting as Program<Voting>;
+describe("Voting", () => {
+  const sdk = makeSDK();
 
+  let votingWrapper: VotingWrapper;
   let countDataPda: PublicKey;
   let countDatabump: number;
 
   before(async () => {
     const [pda, bump] = await PublicKey.findProgramAddress(
       [anchor.utils.bytes.utf8.encode("my_khe_governor")],
-      programID
+      MYKHE_ADDRESS.Voting
     );
 
     countDataPda = pda;
     countDatabump = bump;
   });
 
-  before(async () => {
-    const [pda, bump] = await PublicKey.findProgramAddress(
-      [anchor.utils.bytes.utf8.encode("my_khe_proposal"), ]
-    )
-  })
-
-  it("Initialized governor", async () => {
+  it("Initialized poll counter", async () => {
     await program.methods
       .initialize(countDatabump)
       .accounts({
@@ -48,15 +42,13 @@ describe("voting", () => {
   });
 
   it("Create dummy poll", async () => {
-    let options = [];
     await program.methods
-      .createPoll("Dummy poll", options, )
+      .createPoll("Dummy poll", options)
       .accounts({
         countData: countDataPda,
         payer: provider.wallet.publicKey,
         systemProgram: anchor.web3.SystemProgram.programId,
       })
       .rpc();
-
   });
 });
