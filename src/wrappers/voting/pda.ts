@@ -2,7 +2,7 @@ import { utils } from "@project-serum/anchor";
 import { u64 } from "@saberhq/token-utils";
 import { PublicKey } from "@solana/web3.js";
 
-import { programID } from "../../constants";
+import { MYKHE_ADDRESS } from "../../constants";
 
 /**
  * Fids the PDA of a Governor
@@ -12,7 +12,7 @@ import { programID } from "../../constants";
 export const findGovernorAddress = async (): Promise<[PublicKey, number]> => {
   return await PublicKey.findProgramAddress(
     [anchor.utils.bytes.utf8.encode("my_khe_governor")],
-    programID
+    MYKHE_ADDRESS.Voting
   );
 };
 
@@ -27,7 +27,7 @@ export const findPollAddress = async (
       anchor.utils.bytes.utf8.encode("my_khe_proposal"),
       index.toArrayLike(Buffer, "le", 8),
     ],
-    programID
+    MYKHE_ADDRESS.Voting
   );
 };
 
@@ -47,6 +47,6 @@ export const findVoteAddress = async (
       pollKey.toBuffer(),
       voter.toBuffer(),
     ],
-    programID
+    MYKHE_ADDRESS.Voting
   );
 };
