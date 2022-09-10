@@ -36,20 +36,20 @@ pub struct Poll {
 }
 
 impl Poll {
-    pub const LEN: usize = 8 + 1 + 4 + (280 * 4) + 1 + 4 + (PollOption::LEN * 4) + 1 + 1;
+    pub const LEN: usize = 8 + 8 + 1 + PUBKEY_BYTES + 8 + 8;
 }
 
-#[derive(AnchorSerialize, AnchorDeserialize, Clone, Debug)]
-pub struct PollOption {
-    pub id: u8,
-    pub title: String,
-    pub title_length: u8,
-    pub votes: u64,
-}
+// #[derive(AnchorSerialize, AnchorDeserialize, Clone, Debug)]
+// pub struct PollOption {
+//     pub id: u8,
+//     pub title: String,
+//     pub title_length: u8,
+//     pub votes: u64,
+// }
 
-impl PollOption {
-    const LEN: usize = 8 + 1 + 280 * 4 + 1 + 8;
-}
+// impl PollOption {
+//     const LEN: usize = 8 + 1 + 280 * 4 + 1 + 8;
+// }
 
 #[account]
 pub struct Vote {
