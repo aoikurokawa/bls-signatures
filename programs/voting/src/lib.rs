@@ -25,20 +25,22 @@ pub mod voting {
 
     pub fn create_poll(
         ctx: Context<CreatePoll>,
-        title: String,
-        options: Vec<PollOption>,
         bump: u8,
+        title: String,
+        desctiption_link: String,
     ) -> Result<()> {
         let count_data = &mut ctx.accounts.count_data;
         count_data.proposal_count += 1;
 
         let poll = &mut ctx.accounts.poll;
         let new_poll = Poll {
-            id: count_data.proposal_count,
+            index: count_data.proposal_count,
+            bump,
+            proposer: ctx.accounts.payer.key(),
+            for_votes: 0,
+            against_votes: 0,
             title,
-            options: options.clone(),
-            options_count: options.len() as u8,
-            bump, 
+            desctiption_link, 
         };
         poll.set_inner(new_poll);
 

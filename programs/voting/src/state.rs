@@ -13,12 +13,26 @@ impl PollCount {
 }
 
 #[account]
+#[derive(Debug)]
 pub struct Poll {
-    pub id: u64,
-    pub title: String,
-    pub options: Vec<PollOption>, // max: 4 options
-    pub options_count: u8,
+    /// The unique ID of the poll, auto-incremented
+    pub index: u64,
+    /// Bump seed
     pub bump: u8,
+
+    /// The public key of proposer
+    pub proposer: Pubkey,
+
+    /// Current number of votes in favor of this proposal
+    pub for_votes: u64,
+    /// Current number of votes in opposition to this proposal
+    pub against_votes: u64,
+
+    /// Title of the poll
+    pub title: String,
+
+    /// Link to description of the proposal
+    pub desctiption_link: String,
 }
 
 impl Poll {
