@@ -9,6 +9,7 @@ import { u64 } from "@saberhq/token-utils";
 import { PollCountData, PollData } from "../../programs/voting";
 import { MyKheSDK } from "../../sdk";
 import { findPollAddress } from "./pda";
+import { Poll } from "./types";
 
 export class PollCountDataWrapper {
   private _pollCount: PollCountData | null = null;
@@ -54,11 +55,7 @@ export class PollCountDataWrapper {
    * Creates a new poll
    * @returns
    */
-  async createProposal({
-    proposer = this.sdk.provider.wallet.publicKey,
-  }: {
-    proposer?: PublicKey;
-  }) {
+  async createProposal(title: string, descriptionLink: string): Promise<Poll> {
     const { provider } = this.sdk;
 
     const pollCountData = await this.reload();
@@ -68,19 +65,25 @@ export class PollCountDataWrapper {
     const ixs: TransactionInstruction[] = [];
 
     ixs.push(
-      this.sdk.program.Voting.instruction.createPoll("Dummy Poll", {
-        accounts: {
-          countData: this.pollCountKey,
-          poll: poll,
-          payer: provider.wallet.publicKey,
-          systemProgram: SystemProgram.programId,
-        },
-      })
+      this.sdk.program.Voting.instruction.createPoll(
+        bump,
+        title,
+        descriptionLink,
+        {
+          accounts: {
+            countData: this.pollCountKey,
+            poll: poll,
+            payer: provider.wallet.publicKey,
+            systemProgram: SystemProgram.programId,
+          },
+        }
+      )
     );
 
     return {
       poll,
       index,
+      tx: this.provider.newTX(ixs),
     };
   }
 }
