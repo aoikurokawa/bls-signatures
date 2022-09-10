@@ -3,7 +3,7 @@ import { PublicKey, Keypair, SystemProgram } from "@solana/web3.js";
 
 import { VoteData, VotingProgram } from "../../programs";
 import { MyKheSDK } from "../../sdk";
-import { findGovernorAddress } from "./pda";
+import { findPollCountAddress } from "./pda";
 import { PendingGovernor } from "./types";
 import { VotingWrapper } from "./voting";
 
@@ -22,12 +22,12 @@ export class GovernWrapper {
     return await this.program.account.voteData.fetch(key);
   }
 
-  async createGovernor({
+  async createPollCount({
     baseKP = Keypair.generate(),
   }: {
     baseKP: Keypair;
   }): Promise<PendingGovernor> {
-    const [countData, bump] = await findGovernorAddress();
+    const [countData, bump] = await findPollCountAddress();
     const wrapper = new VotingWrapper(this.sdk, countData);
 
     return {

@@ -9,7 +9,7 @@ import { MYKHE_ADDRESS } from "../../constants";
  * @param base
  * @returns
  */
-export const findGovernorAddress = async (): Promise<[PublicKey, number]> => {
+export const findPollCountAddress = async (): Promise<[PublicKey, number]> => {
   return await PublicKey.findProgramAddress(
     [anchor.utils.bytes.utf8.encode("my_khe_governor")],
     MYKHE_ADDRESS.Voting
