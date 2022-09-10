@@ -10,7 +10,7 @@ import { SystemProgram } from "@solana/web3.js";
 
 import type { MyKhePrograms } from "./constants";
 import { MYKHE_ADDRESS, MYKHE_IDLS } from "./constants";
-import { GovernWrapper } from "./wrappers/voting/govern";
+import { PollCountWrapper } from "./wrappers/voting/pollCount";
 
 /**
  * MyKheSDK
@@ -49,7 +49,7 @@ export class MyKheSDK {
   /**
    * Govern program helpers
    */
-  get govern(): GovernWrapper {
-    return new GovernWrapper(this);
+  get govern(): PollCountWrapper {
+    return new PollCountWrapper(this);
   }
 }

@@ -1,5 +1,7 @@
 {
     "scripts": {
+        "idl:generate": "./scripts/parse-idls.sh && ./scripts/generate-idl-types.sh",
+        "test": "anchor test",
         "lint:fix": "prettier */*.js \"*/**/*{.js,.ts}\" -w",
         "lint": "prettier */*.js \"*/**/*{.js,.ts}\" --check"
     },

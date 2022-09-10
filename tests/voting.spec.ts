@@ -6,7 +6,7 @@ import { expect } from "chai";
 import { Voting } from "../target/types/voting";
 import { MYKHE_ADDRESS } from "../src/constants";
 import { makeSDK, setupGovernor } from "./workspace";
-import { findGovernorAddress, VotingWrapper } from "../src";
+import { findPollCountAddress, VotingWrapper } from "../src";
 
 describe("Voting", () => {
   const sdk = makeSDK();
@@ -27,30 +27,18 @@ describe("Voting", () => {
 
   it("PollCounter (Governor) was initialized", async () => {
     const governorData = await votingW.data();
-    const [] = await findGovernorAddress(governorData)
-    await program.methods
-      .initialize(countDatabump)
-      .accounts({
-        countData: countDataPda,
-        payer: provider.wallet.publicKey,
-        systemProgram: anchor.web3.SystemProgram.programId,
-      })
-      .rpc();
-
-    const account = await program.account.pollCount.fetch(countDataPda);
-
-    expect(account.bump).to.equal(countDatabump);
-    expect(account.proposalCount).to.equal(0);
+    const [pollCount, bump] = await findPollCountAddress();
+    expect(votingW.pollCountKey).to.equal(pollCount);
   });
 
-  it("Create dummy poll", async () => {
-    await program.methods
-      .createPoll("Dummy poll", options)
-      .accounts({
-        countData: countDataPda,
-        payer: provider.wallet.publicKey,
-        systemProgram: anchor.web3.SystemProgram.programId,
-      })
-      .rpc();
-  });
+  // it("Create dummy poll", async () => {
+  //   await program.methods
+  //     .createPoll("Dummy poll", options)
+  //     .accounts({
+  //       countData: countDataPda,
+  //       payer: provider.wallet.publicKey,
+  //       systemProgram: anchor.web3.SystemProgram.programId,
+  //     })
+  //     .rpc();
+  // });
 });

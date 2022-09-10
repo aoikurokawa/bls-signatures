@@ -7,7 +7,7 @@ import { findPollCountAddress } from "./pda";
 import { PendingGovernor } from "./types";
 import { VotingWrapper } from "./voting";
 
-export class GovernWrapper {
+export class PollCountWrapper {
   readonly program: VotingProgram;
 
   constructor(readonly sdk: MyKheSDK) {

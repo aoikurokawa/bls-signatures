@@ -9,7 +9,7 @@ import { u64 } from "@saberhq/token-utils";
 
 import { PollCountData, PollData } from "../../programs/voting";
 import { MyKheSDK } from "../../sdk";
-import { findGovernorAddress, findPollAddress } from "./pda";
+import { findPollCountAddress, findPollAddress } from "./pda";
 import { Poll } from "./types";
 
 export class VotingWrapper {

@@ -3,7 +3,7 @@ import { SolanaProvider } from "@saberhq/solana-contrib";
 import { Keypair, PublicKey } from "@solana/web3.js";
 
 import { MyKheSDK } from "../../src";
-import { findGovernorAddress, VotingWrapper } from "../../src/wrappers";
+import { findPollCountAddress, VotingWrapper } from "../../src/wrappers";
 import { MYKHE_ADDRESS } from "../../src";
 
 export const makeSDK = (): MyKheSDK => {
@@ -27,9 +27,9 @@ export const setupGovernor = async ({
   sdk: MyKheSDK;
 }): Promise<{ votingWrapper: VotingWrapper }> => {
   const baseKP = Keypair.generate();
-  const [pollCount] = await findGovernorAddress();
+  const [pollCount] = await findPollCountAddress();
 
-  const { wrapper, tx: tx2 } = await sdk.govern.createGovernor({ baseKP });
+  const { wrapper, tx: tx2 } = await sdk.govern.createPollCount({ baseKP });
 
   return {
     votingWrapper: wrapper,
