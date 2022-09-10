@@ -25,7 +25,13 @@ export const setupGovernor = async ({
   sdk,
 }: {
   sdk: MyKheSDK;
-}): Promise<{ VotingWrapper }> => {
+}): Promise<{ votingWrapper: VotingWrapper }> => {
   const baseKP = Keypair.generate();
   const [pollCount] = await findGovernorAddress();
+
+  const { wrapper, tx: tx2 } = await sdk.govern.createGovernor({ baseKP });
+
+  return {
+    votingWrapper: wrapper,
+  };
 };

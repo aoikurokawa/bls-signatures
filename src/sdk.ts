@@ -10,6 +10,7 @@ import { SystemProgram } from "@solana/web3.js";
 
 import type { MyKhePrograms } from "./constants";
 import { MYKHE_ADDRESS, MYKHE_IDLS } from "./constants";
+import { GovernWrapper } from "./wrappers/voting/govern";
 
 /**
  * MyKheSDK
@@ -32,9 +33,9 @@ export class MyKheSDK {
   }
 
   /**
-   *  laods the SDK 
-   * @param provider 
-   * @returns 
+   *  laods the SDK
+   * @param provider
+   * @returns
    */
   static load({ provider }: { provider: Provider }): MyKheSDK {
     const programs: MyKhePrograms = newProgramMap<MyKhePrograms>(
@@ -43,5 +44,12 @@ export class MyKheSDK {
       MYKHE_ADDRESS
     );
     return new MyKheSDK(new SolanaAugmentedProvider(provider), programs);
+  }
+
+  /**
+   * Govern program helpers
+   */
+  get govern(): GovernWrapper {
+    return new GovernWrapper(this);
   }
 }

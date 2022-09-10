@@ -5,13 +5,13 @@ import { expect } from "chai";
 
 import { Voting } from "../target/types/voting";
 import { MYKHE_ADDRESS } from "../src/constants";
-import { makeSDK } from "./workspace";
-import { VotingWrapper } from "../src";
+import { makeSDK, setupGovernor } from "./workspace";
+import { findGovernorAddress, VotingWrapper } from "../src";
 
 describe("Voting", () => {
   const sdk = makeSDK();
 
-  let votingWrapper: VotingWrapper;
+  let votingW: VotingWrapper;
   let countDataPda: PublicKey;
   let countDatabump: number;
 
@@ -20,12 +20,14 @@ describe("Voting", () => {
       [anchor.utils.bytes.utf8.encode("my_khe_governor")],
       MYKHE_ADDRESS.Voting
     );
+    const { votingWrapper } = await setupGovernor({ sdk });
 
-    countDataPda = pda;
-    countDatabump = bump;
+    votingW = votingWrapper;
   });
 
-  it("Initialized poll counter", async () => {
+  it("PollCounter (Governor) was initialized", async () => {
+    const governorData = await votingW.data();
+    const [] = await findGovernorAddress(governorData)
     await program.methods
       .initialize(countDatabump)
       .accounts({
