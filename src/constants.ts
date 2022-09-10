@@ -10,7 +10,7 @@ export interface MyKhePrograms {
 }
 
 export const MYKHE_ADDRESS = {
-  Voting: new PublicKey(idl.metadata.address),
+  Voting: new PublicKey("AAFLi32KG5XDdfcJUEjHnQFCghQfusX4pbqtYaivv7DE"),
 };
 
 /**
