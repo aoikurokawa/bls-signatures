@@ -20,6 +20,7 @@ pub struct Initialize<'info> {
 }
 
 #[derive(Accounts)]
+#[instruction(title: String, desctiption_link: String)]
 pub struct CreatePoll<'info> {
     #[account(
         mut,
@@ -37,7 +38,9 @@ pub struct CreatePoll<'info> {
         ],
         bump,
         payer = payer, 
-        space = Poll::LEN
+        space = Poll::LEN 
+            + 4 + title.as_bytes().len() 
+            + 4 + desctiption_link.as_bytes().len() 
     )]
     pub poll: Account<'info, Poll>,
     #[account(mut)]
