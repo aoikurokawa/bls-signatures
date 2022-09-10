@@ -6,7 +6,7 @@ mod state;
 use account_structs::*;
 use state::*;
 
-declare_id!("AAFLi32KG5XDdfcJUEjHnQFCghQfusX4pbqtYaivv7DE");
+declare_id!("Fx2TKLRC5V8Xu6R1w42C6k7NUXr35qVudXX86jk6RVky");
 
 #[program]
 pub mod voting {

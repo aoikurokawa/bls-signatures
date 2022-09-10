@@ -1816,6 +1816,13 @@ __metadata:
   languageName: node
   linkType: hard
 
+"jsbi@npm:^4.3.0":
+  version: 4.3.0
+  resolution: "jsbi@npm:4.3.0"
+  checksum: 27c4f178eb7fd9d1756144066fdebc62f4a0176e877f55e646e8ce84075c13551bd575a316b9959ccdcca9d5dc05a81c9907cfa09f0cfeb43c9777797e36b0e9
+  languageName: node
+  linkType: hard
+
 "json-schema-traverse@npm:^0.4.1":
   version: 0.4.1
   resolution: "json-schema-traverse@npm:0.4.1"
@@ -2532,6 +2539,7 @@ __metadata:
     "@types/mocha": ^9.0.0
     chai: ^4.3.4
     eslint: ^8.23.0
+    jsbi: ^4.3.0
     mocha: ^9.0.3
     prettier: ^2.6.2
     ts-mocha: ^10.0.0

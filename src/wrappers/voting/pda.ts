@@ -1,3 +1,4 @@
+import * as anchor from "@project-serum/anchor";
 import { utils } from "@project-serum/anchor";
 import { u64 } from "@saberhq/token-utils";
 import { PublicKey } from "@solana/web3.js";

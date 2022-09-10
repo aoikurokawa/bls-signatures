@@ -7,10 +7,10 @@ copy = "cp -r ./target/idl ./src/"
 
 [provider]
 cluster = "localnet"
-wallet = "~/.config/solana/id.json"
+wallet = "./tests/test-key.json"
 
 [programs.localnet]
-voting = "AAFLi32KG5XDdfcJUEjHnQFCghQfusX4pbqtYaivv7DE"
+voting = "Fx2TKLRC5V8Xu6R1w42C6k7NUXr35qVudXX86jk6RVky"
 
 [registry]
 url = "https://anchor.projectserum.com"
