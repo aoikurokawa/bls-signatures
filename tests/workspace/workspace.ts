@@ -30,8 +30,7 @@ export const setupPollCount = async ({
   const baseKP = Keypair.generate();
 
   const { wrapper, tx: tx2 } = await sdk.pollCount.createPollCount({ baseKP });
-  // expectTX(tx2, "create pollcount").to.be.fulfilled;
-  console.log("Wrapper in setupPollCount", wrapper);
+  await expectTX(tx2, "create pollcount").to.be.fulfilled;
 
   return {
     votingWrapper: wrapper,

@@ -55,4 +55,4 @@ generate_sdk_idls() {
     fi
 }
 
-generate_sdk_idls ./src/idls 'artifacts/idl/*.json'
+generate_sdk_idls ./src/idls/ 'artifacts/idl/*.json'

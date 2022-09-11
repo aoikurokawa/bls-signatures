@@ -7,7 +7,7 @@ export * from "../idls/voting";
 export type VotingType = AnchorTypes<
   VotingIDL,
   {
-    pollCountData: PollCountData;
+    pollCount: PollCountData;
     pollData: PollData;
     voteData: VoteData;
   },

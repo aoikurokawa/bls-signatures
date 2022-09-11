@@ -26,7 +26,8 @@ export class VotingWrapper {
   }
 
   async reload(): Promise<PollCountData> {
-    return await this.program.account.pollCountData.fetch(this.pollCountKey);
+    const [pollCountData, bump] = await findPollCountAddress();
+    return await this.program.account.pollCount.fetch(pollCountData);
   }
 
   async data(): Promise<PollCountData> {

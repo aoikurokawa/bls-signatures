@@ -1,5 +1,4 @@
 import { PublicKey } from "@solana/web3.js";
-import idl from "./idl/voting.json";
 import { VotingJSON, VotingProgram } from "./programs";
 
 /**
