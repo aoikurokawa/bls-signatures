@@ -28,7 +28,6 @@ export const setupPollCount = async ({
   sdk: MyKheSDK;
 }): Promise<{ votingWrapper: VotingWrapper }> => {
   const baseKP = Keypair.generate();
-  const [pollCountPDA, bump] = await findPollCountAddress();
 
   const { wrapper, tx: tx2 } = await sdk.pollCount.createPollCount({ baseKP });
   // expectTX(tx2, "create pollcount").to.be.fulfilled;

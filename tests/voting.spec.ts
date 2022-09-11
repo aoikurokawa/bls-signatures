@@ -16,10 +16,6 @@ describe("Voting", () => {
   let countDatabump: number;
 
   before(async () => {
-    // const [pda, bump] = await PublicKey.findProgramAddress(
-    //   [anchor.utils.bytes.utf8.encode("my_khe_governor")],
-    //   MYKHE_ADDRESS.Voting
-    // );
     const { votingWrapper } = await setupPollCount({ sdk });
 
     votingW = votingWrapper;
