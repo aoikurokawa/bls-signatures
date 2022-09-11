@@ -25,7 +25,7 @@ describe("Voting", () => {
   it("PollCounter (Governor) was initialized", async () => {
     const pollCountData = await votingW.data();
     const [pollCount, bump] = await findPollCountAddress();
-    expect(votingW.pollCountKey).to.eqAddress(pollCount);
+    expect(votingW.pollCountKey.toString()).to.eq(pollCount.toString());
   });
 
   // it("Create dummy poll", async () => {
