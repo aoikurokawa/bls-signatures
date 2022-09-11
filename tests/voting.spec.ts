@@ -34,14 +34,27 @@ describe("Voting", () => {
     expect(pollCountData.proposalCount.toString()).to.equal(ZERO.toString());
   });
 
-  // it("Create dummy poll", async () => {
-  //   await program.methods
-  //     .createPoll("Dummy poll", options)
-  //     .accounts({
-  //       countData: countDataPda,
-  //       payer: provider.wallet.publicKey,
-  //       systemProgram: anchor.web3.SystemProgram.programId,
-  //     })
-  //     .rpc();
-  // });
+  describe("Proposal", () => {
+    let pollIndex: anchor.BN;
+    let pollKey: PublicKey;
+
+    beforeEach("create a dummy poll", async () => {
+      const { poll, index, tx } = await votingW.createProposal(
+        "Dummy title",
+        "https://www.dummy.com/hello"
+      );
+      await votingW.program.methods
+        .createPoll("Dummy poll", "https://www.dummy.com/hello")
+        .accounts({
+          countData: countDataPda,
+          poll: poll,
+          payer: votingW.provider.wallet.publicKey,
+          systemProgram: anchor.web3.SystemProgram.programId,
+        })
+        .rpc();
+
+      pollIndex = index;
+      pollKey = poll;
+    });
+  });
 });
