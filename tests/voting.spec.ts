@@ -8,7 +8,7 @@ import invariant from "tiny-invariant";
 import { Voting } from "../target/types/voting";
 import { MYKHE_ADDRESS } from "../src/constants";
 import { makeSDK, setupPollCount, ZERO } from "./workspace";
-import { findPollCountAddress, VotingWrapper } from "../src";
+import { findPollAddress, findPollCountAddress, VotingWrapper } from "../src";
 
 describe("Voting", () => {
   const sdk = makeSDK();
@@ -55,6 +55,13 @@ describe("Voting", () => {
 
       pollIndex = index;
       pollKey = poll;
+    });
+
+    it("Poll as initialized", async () => {
+      const proposer = sdk.provider.wallet.publicKey;
+      const { pollCountKey } = votingW;
+      const [expectedPollKey, bump] = await findPollAddress(pollIndex);
+      expect(pollCountKey.toString()).to.equal(expectedPollKey.toString());
     });
   });
 });
