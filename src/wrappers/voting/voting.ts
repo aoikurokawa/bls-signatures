@@ -81,6 +81,7 @@ export class VotingWrapper {
     );
 
     return {
+      bump,
       poll,
       index,
       tx: this.provider.newTX(ixs),

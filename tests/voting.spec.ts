@@ -39,12 +39,12 @@ describe("Voting", () => {
     let pollKey: PublicKey;
 
     beforeEach("create a dummy poll", async () => {
-      const { poll, index, tx } = await votingW.createProposal(
+      const { bump, poll, index, tx } = await votingW.createProposal(
         "Dummy title",
         "https://www.dummy.com/hello"
       );
       await votingW.program.methods
-        .createPoll("Dummy poll", "https://www.dummy.com/hello")
+        .createPoll(bump, "Dummy poll", "https://www.dummy.com/hello")
         .accounts({
           countData: countDataPda,
           poll: poll,
