@@ -1,7 +1,8 @@
 import * as anchor from "@project-serum/anchor";
 import { Program } from "@project-serum/anchor";
+import {} from "@saberhq/chai-solana";
 import { PublicKey } from "@solana/web3.js";
-import { expect } from "chai";
+import { assert, expect } from "chai";
 
 import { Voting } from "../target/types/voting";
 import { MYKHE_ADDRESS } from "../src/constants";
@@ -24,7 +25,7 @@ describe("Voting", () => {
   it("PollCounter (Governor) was initialized", async () => {
     const pollCountData = await votingW.data();
     const [pollCount, bump] = await findPollCountAddress();
-    expect(votingW.pollCountKey).to.equal(pollCount);
+    expect(votingW.pollCountKey).to.eqAddress(pollCount);
   });
 
   // it("Create dummy poll", async () => {

@@ -1,4 +1,4 @@
-import "chai-as-promised";
+// import "chai-as-promised";
 
 import type { Idl } from "@project-serum/anchor";
 import type {
@@ -21,7 +21,7 @@ export const expectTX = (
   tx: PromiseOrValue<TransactionLike | null>,
   msg?: string,
   cb?: (receipt: TransactionReceipt) => Promise<void>
-): Chai.PromisedAssertion => {
+) => {
   const handleReceipt = async (receipt: TransactionReceipt) => {
     await cb?.(receipt);
     return receipt;
@@ -38,13 +38,11 @@ export const expectTX = (
         })
         .then(handleReceipt),
       msg
-    ).eventually;
+    );
   } else if (tx) {
-    return expect(confirmTransactionLike(tx).then(handleReceipt), msg)
-      .eventually;
+    return expect(confirmTransactionLike(tx).then(handleReceipt), msg);
   } else {
-    return expect(Promise.reject(new Error("transaction is null")), msg)
-      .eventually;
+    return expect(Promise.reject(new Error("transaction is null")), msg);
   }
 };
 

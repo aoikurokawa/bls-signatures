@@ -30,6 +30,15 @@ export class PollCountWrapper {
     const [countData, bump] = await findPollCountAddress();
     const wrapper = new VotingWrapper(this.sdk, countData);
 
+    await wrapper.program.methods
+      .initialize(bump)
+      .accounts({
+        countData: countData,
+        payer: this.provider.wallet.publicKey,
+        systemProgram: SystemProgram.programId,
+      })
+      .rpc();
+
     return {
       wrapper,
       tx: new TransactionEnvelope(

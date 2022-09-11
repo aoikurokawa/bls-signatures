@@ -12,6 +12,7 @@
         "@saberhq/solana-contrib": "^1.14.5",
         "@saberhq/token-utils": "^1.14.5",
         "chai": "4.3.0",
+        "chai-as-promised": "^7.1.1",
         "jsbi": "^4.3.0"
     },
     "devDependencies": {
