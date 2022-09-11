@@ -5,7 +5,7 @@ import { expect } from "chai";
 
 import { Voting } from "../target/types/voting";
 import { MYKHE_ADDRESS } from "../src/constants";
-import { makeSDK, setupGovernor } from "./workspace";
+import { makeSDK, setupPollCount } from "./workspace";
 import { findPollCountAddress, VotingWrapper } from "../src";
 
 describe("Voting", () => {
@@ -16,17 +16,17 @@ describe("Voting", () => {
   let countDatabump: number;
 
   before(async () => {
-    const [pda, bump] = await PublicKey.findProgramAddress(
-      [anchor.utils.bytes.utf8.encode("my_khe_governor")],
-      MYKHE_ADDRESS.Voting
-    );
-    const { votingWrapper } = await setupGovernor({ sdk });
+    // const [pda, bump] = await PublicKey.findProgramAddress(
+    //   [anchor.utils.bytes.utf8.encode("my_khe_governor")],
+    //   MYKHE_ADDRESS.Voting
+    // );
+    const { votingWrapper } = await setupPollCount({ sdk });
 
     votingW = votingWrapper;
   });
 
   it("PollCounter (Governor) was initialized", async () => {
-    const governorData = await votingW.data();
+    const pollCountData = await votingW.data();
     const [pollCount, bump] = await findPollCountAddress();
     expect(votingW.pollCountKey).to.equal(pollCount);
   });

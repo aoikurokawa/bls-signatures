@@ -1,5 +1,6 @@
 import * as anchor from "@project-serum/anchor";
 import { SolanaProvider } from "@saberhq/solana-contrib";
+import { expectTX } from "@saberhq/chai-solana";
 import { Keypair, PublicKey } from "@solana/web3.js";
 
 import { MyKheSDK } from "../../src";
@@ -21,15 +22,17 @@ export const makeSDK = (): MyKheSDK => {
   });
 };
 
-export const setupGovernor = async ({
+export const setupPollCount = async ({
   sdk,
 }: {
   sdk: MyKheSDK;
 }): Promise<{ votingWrapper: VotingWrapper }> => {
   const baseKP = Keypair.generate();
-  const [pollCount] = await findPollCountAddress();
+  const [pollCountPDA, bump] = await findPollCountAddress();
 
-  const { wrapper, tx: tx2 } = await sdk.govern.createPollCount({ baseKP });
+  const { wrapper, tx: tx2 } = await sdk.pollCount.createPollCount({ baseKP });
+  // expectTX(tx2, "create pollcount").to.be.fulfilled;
+  console.log("Wrapper in setupPollCount", wrapper);
 
   return {
     votingWrapper: wrapper,

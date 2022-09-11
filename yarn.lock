@@ -198,6 +198,30 @@ __metadata:
   languageName: node
   linkType: hard
 
+"@saberhq/chai-solana@npm:^1.14.5":
+  version: 1.14.5
+  resolution: "@saberhq/chai-solana@npm:1.14.5"
+  dependencies:
+    "@saberhq/anchor-contrib": ^1.14.5
+    "@saberhq/solana-contrib": ^1.14.5
+    "@saberhq/token-utils": ^1.14.5
+    "@types/chai": ^4.3.3
+    "@types/chai-as-promised": ^7.1.5
+    "@types/promise-retry": ^1.1.3
+    chai: =4.3.4
+    chai-as-promised: ^7.1.1
+    chai-bn: ^0.3.1
+    colors: ^1.4.0
+    tslib: ^2.4.0
+  peerDependencies:
+    "@project-serum/anchor": ">=0.17"
+    "@solana/web3.js": ^1.42
+    bn.js: ^5.2.0
+    jsbi: "*"
+  checksum: a29dfdbef4dabdfdc14c552bd50dabf668cc2e90613a6ff20a0d53604394606b8377feccf6a59f31193b76f9001a21903d35c8008e090ab61a9601ce62d4c1ac
+  languageName: node
+  linkType: hard
+
 "@saberhq/option-utils@npm:^1.14.5":
   version: 1.14.5
   resolution: "@saberhq/option-utils@npm:1.14.5"
@@ -337,7 +361,16 @@ __metadata:
   languageName: node
   linkType: hard
 
-"@types/chai@npm:^4.3.0":
+"@types/chai-as-promised@npm:^7.1.5":
+  version: 7.1.5
+  resolution: "@types/chai-as-promised@npm:7.1.5"
+  dependencies:
+    "@types/chai": "*"
+  checksum: 7c1345c6e32513d52d8e562ec173c23161648d6b792046525f18803a9932d7b3ad3dca8f0181e3c529ec42b106099f174e34edeb184d61dc93e32c98b5132fd4
+  languageName: node
+  linkType: hard
+
+"@types/chai@npm:*, @types/chai@npm:^4.3.0, @types/chai@npm:^4.3.3":
   version: 4.3.3
   resolution: "@types/chai@npm:4.3.3"
   checksum: 20cd094753e137cfc35939cae7f0ed78ecda7861e5c94704efab6979b9121a63807e9b631bdcf3a2792d6c6dba44050b13387262f9e63ebb040741c01c345f0a
@@ -794,18 +827,38 @@ __metadata:
   languageName: node
   linkType: hard
 
-"chai@npm:^4.3.4":
-  version: 4.3.6
-  resolution: "chai@npm:4.3.6"
+"chai-as-promised@npm:^7.1.1":
+  version: 7.1.1
+  resolution: "chai-as-promised@npm:7.1.1"
+  dependencies:
+    check-error: ^1.0.2
+  peerDependencies:
+    chai: ">= 2.1.2 < 5"
+  checksum: 7262868a5b51a12af4e432838ddf97a893109266a505808e1868ba63a12de7ee1166e9d43b5c501a190c377c1b11ecb9ff8e093c89f097ad96c397e8ec0f8d6a
+  languageName: node
+  linkType: hard
+
+"chai-bn@npm:^0.3.1":
+  version: 0.3.1
+  resolution: "chai-bn@npm:0.3.1"
+  peerDependencies:
+    bn.js: ^5.0.0
+    chai: ^4.0.0
+  checksum: 316a82b98df2a1e66edeee0e835fd7b418c3b5e1794b69264eb76be65d1ecea1f3a9ce2f1f94ec7f0f6964c579c2986999d7bcab98d30f9160ec753b4fdfd692
+  languageName: node
+  linkType: hard
+
+"chai@npm:4.3.4, chai@npm:=4.3.4":
+  version: 4.3.4
+  resolution: "chai@npm:4.3.4"
   dependencies:
     assertion-error: ^1.1.0
     check-error: ^1.0.2
     deep-eql: ^3.0.1
     get-func-name: ^2.0.0
-    loupe: ^2.3.1
     pathval: ^1.1.1
     type-detect: ^4.0.5
-  checksum: acff93fd537f96d4a4d62dd83810285dffcfccb5089e1bf2a1205b28ec82d93dff551368722893cf85004282df10ee68802737c33c90c5493957ed449ed7ce71
+  checksum: 772c522b3bfe3fcf0e0e74edfe584cd886b0e85a73126dec750095300e023d4e1ec6d40e3c35a80d2bd8f33dca46c42767a36f5f50f32dca6fa31c88b5f49ab8
   languageName: node
   linkType: hard
 
@@ -892,6 +945,13 @@ __metadata:
   bin:
     color-support: bin.js
   checksum: 9b7356817670b9a13a26ca5af1c21615463b500783b739b7634a0c2047c16cef4b2865d7576875c31c3cddf9dd621fa19285e628f20198b233a5cfdda6d0793b
+  languageName: node
+  linkType: hard
+
+"colors@npm:^1.4.0":
+  version: 1.4.0
+  resolution: "colors@npm:1.4.0"
+  checksum: 98aa2c2418ad87dedf25d781be69dc5fc5908e279d9d30c34d8b702e586a0474605b3a189511482b9d5ed0d20c867515d22749537f7bc546256c6014f3ebdcec
   languageName: node
   linkType: hard
 
@@ -1919,15 +1979,6 @@ __metadata:
   languageName: node
   linkType: hard
 
-"loupe@npm:^2.3.1":
-  version: 2.3.4
-  resolution: "loupe@npm:2.3.4"
-  dependencies:
-    get-func-name: ^2.0.0
-  checksum: 5af91db61aa18530f1749a64735ee194ac263e65e9f4d1562bf3036c591f1baa948289c193e0e34c7b5e2c1b75d3c1dc4fce87f5edb3cee10b0c0df46bc9ffb3
-  languageName: node
-  linkType: hard
-
 "lower-case@npm:^2.0.2":
   version: 2.0.2
   resolution: "lower-case@npm:2.0.2"
@@ -2532,12 +2583,13 @@ __metadata:
   dependencies:
     "@project-serum/anchor": ^0.24.2
     "@saberhq/anchor-contrib": ^1.14.5
+    "@saberhq/chai-solana": ^1.14.5
     "@saberhq/solana-contrib": ^1.14.5
     "@saberhq/token-utils": ^1.14.5
     "@types/bn.js": ^5.1.0
     "@types/chai": ^4.3.0
     "@types/mocha": ^9.0.0
-    chai: ^4.3.4
+    chai: 4.3.4
     eslint: ^8.23.0
     jsbi: ^4.3.0
     mocha: ^9.0.3

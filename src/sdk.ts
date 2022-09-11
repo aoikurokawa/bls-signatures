@@ -47,9 +47,9 @@ export class MyKheSDK {
   }
 
   /**
-   * Govern program helpers
+   * PollCount program helpers
    */
-  get govern(): PollCountWrapper {
+  get pollCount(): PollCountWrapper {
     return new PollCountWrapper(this);
   }
 }

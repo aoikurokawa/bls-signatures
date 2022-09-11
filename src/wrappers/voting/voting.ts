@@ -22,13 +22,11 @@ export class VotingWrapper {
   }
 
   get program() {
-    return this.sdk.program;
+    return this.sdk.program.Voting;
   }
 
   async reload(): Promise<PollCountData> {
-    return await this.program.Voting.account.pollCountData.fetch(
-      this.pollCountKey
-    );
+    return await this.program.account.pollCountData.fetch(this.pollCountKey);
   }
 
   async data(): Promise<PollCountData> {
@@ -44,7 +42,7 @@ export class VotingWrapper {
   }
 
   async findPollByKey(key: PublicKey): Promise<PollData> {
-    return await this.program.Voting.account.pollData.fetch(key);
+    return await this.program.account.pollData.fetch(key);
   }
 
   async fetchPoll(index: BN): Promise<PollData> {
