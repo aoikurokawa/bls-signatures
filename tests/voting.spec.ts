@@ -32,6 +32,8 @@ describe("Voting", () => {
 
     expect(pollCountData.bump).to.equal(bump);
     expect(pollCountData.proposalCount.toString()).to.equal(ZERO.toString());
+
+    countDataPda = pollCount;
   });
 
   describe("Proposal", () => {
@@ -39,9 +41,7 @@ describe("Voting", () => {
     let pollKey: PublicKey;
 
     beforeEach("create a dummy poll", async () => {
-      const { bump, poll, index, tx } = await votingW.createProposal(
-        "Dummy title",
-        "https://www.dummy.com/hello"
+      const { bump, poll, index } = await votingW.createProposal(
       );
       await votingW.program.methods
         .createPoll(bump, "Dummy poll", "https://www.dummy.com/hello")

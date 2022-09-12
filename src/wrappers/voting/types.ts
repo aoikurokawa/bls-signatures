@@ -13,7 +13,7 @@ export type Poll = {
   bump: number;
   poll: PublicKey;
   index: BN;
-  tx: TransactionEnvelope;
+  // tx: TransactionEnvelope;
 };
 
 /**

@@ -27,7 +27,7 @@ pub struct CreatePoll<'info> {
         seeds = [
             b"my_khe_governor".as_ref(), 
         ],
-        bump,
+        bump
     )]
     pub count_data: Account<'info, PollCount>,
     #[account(

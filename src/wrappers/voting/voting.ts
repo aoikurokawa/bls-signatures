@@ -55,36 +55,35 @@ export class VotingWrapper {
    * Creates a new poll
    * @returns
    */
-  async createProposal(title: string, descriptionLink: string): Promise<Poll> {
+  async createProposal(): Promise<Poll> {
     const { provider } = this.sdk;
 
     const pollCountData = await this.reload();
     const index = new u64(pollCountData.proposalCount);
     const [poll, bump] = await findPollAddress(index);
 
-    const ixs: TransactionInstruction[] = [];
+    // const ixs: TransactionInstruction[] = [];
 
-    ixs.push(
-      this.sdk.program.Voting.instruction.createPoll(
-        bump,
-        title,
-        descriptionLink,
-        {
-          accounts: {
-            countData: this.pollCountKey,
-            poll: poll,
-            payer: provider.wallet.publicKey,
-            systemProgram: SystemProgram.programId,
-          },
-        }
-      )
-    );
+    // ixs.push(
+    //   this.sdk.program.Voting.instruction.createPoll(
+    //     bump,
+    //     title,
+    //     descriptionLink,
+    //     {
+    //       accounts: {
+    //         countData: this.pollCountKey,
+    //         poll: poll,
+    //         payer: provider.wallet.publicKey,
+    //         systemProgram: SystemProgram.programId,
+    //       },
+    //     }
+    //   )
+    // );
 
     return {
       bump,
       poll,
       index,
-      tx: this.provider.newTX(ixs),
     };
   }
 }
