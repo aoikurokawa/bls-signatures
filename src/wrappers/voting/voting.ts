@@ -7,10 +7,10 @@ import {
 import type BN from "bn.js";
 import { u64 } from "@saberhq/token-utils";
 
-import { PollCountData, PollData } from "../../programs/voting";
+import { PollCountData, PollData, VoteData } from "../../programs/voting";
 import { MyKheSDK } from "../../sdk";
-import { findPollCountAddress, findPollAddress } from "./pda";
-import { Poll } from "./types";
+import { findPollCountAddress, findPollAddress, findVoteAddress } from "./pda";
+import { Poll, Vote } from "./types";
 
 export class VotingWrapper {
   private _pollCount: PollCountData | null = null;
@@ -51,39 +51,50 @@ export class VotingWrapper {
     return await this.findPollByKey(key);
   }
 
+  async findVoteKeyAndBump(pollkey: PublicKey): Promise<[PublicKey, number]> {
+    const voter = this.provider.wallet.publicKey;
+    return await findVoteAddress(pollkey, voter);
+  }
+
+  async fetchVote(pollKey: PublicKey): Promise<VoteData> {
+    return await this.program.account.vote.fetch(pollKey);
+  }
+
   /**
    * Creates a new poll
    * @returns
    */
   async createProposal(): Promise<Poll> {
-    const { provider } = this.sdk;
-
     const pollCountData = await this.reload();
     const index = new u64(pollCountData.proposalCount);
     const [poll, bump] = await findPollAddress(index);
-
-    // const ixs: TransactionInstruction[] = [];
-
-    // ixs.push(
-    //   this.sdk.program.Voting.instruction.createPoll(
-    //     bump,
-    //     title,
-    //     descriptionLink,
-    //     {
-    //       accounts: {
-    //         countData: this.pollCountKey,
-    //         poll: poll,
-    //         payer: provider.wallet.publicKey,
-    //         systemProgram: SystemProgram.programId,
-    //       },
-    //     }
-    //   )
-    // );
 
     return {
       bump,
       poll,
       index,
+    };
+  }
+
+  /**
+   * Vote
+   * @returns Promise<Vote>
+   */
+  async votePoll(): Promise<Vote> {
+    const { provider } = this.sdk;
+    const pollCountData = await this.reload();
+    const index = new u64(pollCountData.proposalCount);
+    const [poll, _bump] = await findPollAddress(index);
+
+    const [votePdaKey, bump] = await findVoteAddress(
+      poll,
+      provider.wallet.publicKey
+    );
+
+    return {
+      payer: provider.wallet.publicKey,
+      bump,
+      votePdaKey,
     };
   }
 }

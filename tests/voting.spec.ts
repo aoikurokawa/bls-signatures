@@ -7,7 +7,12 @@ import invariant from "tiny-invariant";
 import { Voting } from "../target/types/voting";
 import { MYKHE_ADDRESS } from "../src/constants";
 import { makeSDK, setupPollCount, ZERO } from "./workspace";
-import { findPollAddress, findPollCountAddress, VotingWrapper } from "../src";
+import {
+  findPollAddress,
+  findPollCountAddress,
+  findVoteAddress,
+  VotingWrapper,
+} from "../src";
 
 describe("Voting", () => {
   const sdk = makeSDK();
@@ -39,7 +44,7 @@ describe("Voting", () => {
     let pollIndex: anchor.BN;
     let pollKey: PublicKey;
 
-    beforeEach("create a dummy poll", async () => {
+    before("create a dummy poll", async () => {
       const { bump, poll, index } = await votingW.createProposal();
       await votingW.program.methods
         .createPoll(bump, "Dummy poll", "https://www.dummy.com/hello")
@@ -68,6 +73,29 @@ describe("Voting", () => {
       expect(pollData.proposer.toString()).to.equal(
         votingW.provider.wallet.publicKey.toString()
       );
+    });
+
+    it("Vote", async () => {
+      const { payer, bump, votePdaKey } = await votingW.votePoll();
+      console.log("Payer: ", payer);
+      console.log("votePdaKey: ", votePdaKey.toString());
+
+      await votingW.program.methods
+        .votePoll(bump, payer, 1)
+        .accounts({
+          poll: pollKey,
+          vote: votePdaKey,
+          payer,
+          systemProgram: anchor.web3.SystemProgram.programId,
+        })
+        .rpc();
+
+      const voteData = await votingW.fetchVote(votePdaKey);
+
+      expect(voteData.bump).to.equal(bump);
+      expect(voteData.optionSelected).to.equal(1);
+      expect(voteData.poll.toString()).to.equal(votePdaKey.toString());
+      expect(voteData.voter.toString()).to.equal(payer.toString());
     });
   });
 });

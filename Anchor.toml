@@ -15,4 +15,7 @@ voting = "Fx2TKLRC5V8Xu6R1w42C6k7NUXr35qVudXX86jk6RVky"
 [registry]
 url = "https://anchor.projectserum.com"
 
+[test]
+startup_wait = 10000
+
 

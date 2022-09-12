@@ -16,6 +16,12 @@ export type Poll = {
   // tx: TransactionEnvelope;
 };
 
+export type Vote = {
+  payer: PublicKey;
+  bump: number;
+  votePdaKey: PublicKey;
+};
+
 /**
  * Side of a vote
  */
