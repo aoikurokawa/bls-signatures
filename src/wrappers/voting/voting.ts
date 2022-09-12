@@ -43,7 +43,7 @@ export class VotingWrapper {
   }
 
   async findPollByKey(key: PublicKey): Promise<PollData> {
-    return await this.program.account.pollData.fetch(key);
+    return await this.program.account.poll.fetch(key);
   }
 
   async fetchPoll(index: BN): Promise<PollData> {

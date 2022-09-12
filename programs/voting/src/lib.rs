@@ -1,9 +1,11 @@
 use anchor_lang::prelude::*;
 
 mod account_structs;
+mod events;
 mod state;
 
 use account_structs::*;
+use events::*;
 use state::*;
 
 declare_id!("Fx2TKLRC5V8Xu6R1w42C6k7NUXr35qVudXX86jk6RVky");
@@ -30,7 +32,6 @@ pub mod voting {
         desctiption_link: String,
     ) -> Result<()> {
         let count_data = &mut ctx.accounts.count_data;
-        count_data.proposal_count += 1;
 
         let poll = &mut ctx.accounts.poll;
         let new_poll = Poll {
@@ -40,9 +41,16 @@ pub mod voting {
             for_votes: 0,
             against_votes: 0,
             title,
-            desctiption_link, 
+            desctiption_link,
         };
         poll.set_inner(new_poll);
+
+        count_data.proposal_count += 1;
+
+        emit!(PollCreateEvent {
+            poll: poll.key(),
+            index: poll.index,
+        });
 
         Ok(())
     }
@@ -53,11 +61,10 @@ pub mod voting {
             poll: ctx.accounts.poll.key(),
             voter,
             option_selected: option,
-            bump 
+            bump,
         };
 
         vote.set_inner(new_vote);
-
 
         Ok(())
     }

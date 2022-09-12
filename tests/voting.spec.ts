@@ -1,6 +1,5 @@
 import * as anchor from "@project-serum/anchor";
 import { Program } from "@project-serum/anchor";
-import {} from "@saberhq/chai-solana";
 import { PublicKey } from "@solana/web3.js";
 import { assert, expect } from "chai";
 import invariant from "tiny-invariant";
@@ -61,6 +60,14 @@ describe("Voting", () => {
       const { pollCountKey } = votingW;
       const [expectedPollKey, bump] = await findPollAddress(pollIndex);
       expect(pollKey.toString()).to.equal(expectedPollKey.toString());
+
+      const pollCountData = await votingW.data();
+      const pollData = await votingW.findPollByKey(pollKey);
+      expect(pollData.bump).to.equal(bump);
+      expect(pollData.index.toString()).to.equal(pollIndex.toString());
+      expect(pollData.proposer.toString()).to.equal(
+        votingW.provider.wallet.publicKey.toString()
+      );
     });
   });
 });

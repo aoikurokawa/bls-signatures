@@ -8,8 +8,8 @@ export type VotingType = AnchorTypes<
   VotingIDL,
   {
     pollCount: PollCountData;
-    pollData: PollData;
-    voteData: VoteData;
+    poll: PollData;
+    vote: VoteData;
   },
   {}
 >;
