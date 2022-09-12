@@ -13,7 +13,7 @@ impl PollCount {
 }
 
 #[account]
-#[derive(Debug)]
+#[derive(Debug, Default)]
 pub struct Poll {
     /// The unique ID of the poll, auto-incremented
     pub index: u64,

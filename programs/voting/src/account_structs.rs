@@ -20,15 +20,9 @@ pub struct Initialize<'info> {
 }
 
 #[derive(Accounts)]
-#[instruction(title: String, desctiption_link: String)]
+#[instruction(bump: u8, title: String, desctiption_link: String)]
 pub struct CreatePoll<'info> {
-    #[account(
-        mut,
-        seeds = [
-            b"my_khe_governor".as_ref(), 
-        ],
-        bump
-    )]
+    #[account(mut)]
     pub count_data: Account<'info, PollCount>,
     #[account(
         init,

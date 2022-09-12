@@ -41,8 +41,7 @@ describe("Voting", () => {
     let pollKey: PublicKey;
 
     beforeEach("create a dummy poll", async () => {
-      const { bump, poll, index } = await votingW.createProposal(
-      );
+      const { bump, poll, index } = await votingW.createProposal();
       await votingW.program.methods
         .createPoll(bump, "Dummy poll", "https://www.dummy.com/hello")
         .accounts({
@@ -61,7 +60,7 @@ describe("Voting", () => {
       const proposer = sdk.provider.wallet.publicKey;
       const { pollCountKey } = votingW;
       const [expectedPollKey, bump] = await findPollAddress(pollIndex);
-      expect(pollCountKey.toString()).to.equal(expectedPollKey.toString());
+      expect(pollKey.toString()).to.equal(expectedPollKey.toString());
     });
   });
 });
