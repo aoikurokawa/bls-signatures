@@ -43,7 +43,7 @@ pub struct CreatePoll<'info> {
 }
 
 #[derive(Accounts)]
-#[instruction(voter: Pubkey)]
+#[instruction(bump: u8, voter: Pubkey)]
 pub struct VotePoll<'info> {
     pub poll: Account<'info, Poll>,
     #[account(

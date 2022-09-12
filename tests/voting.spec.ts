@@ -76,14 +76,13 @@ describe("Voting", () => {
     });
 
     it("Vote", async () => {
+      const pollPDAKey = await votingW.findPollAddress(pollIndex);
       const { payer, bump, votePdaKey } = await votingW.votePoll();
-      console.log("Payer: ", payer);
-      console.log("votePdaKey: ", votePdaKey.toString());
 
       await votingW.program.methods
         .votePoll(bump, payer, 1)
         .accounts({
-          poll: pollKey,
+          poll: pollPDAKey,
           vote: votePdaKey,
           payer,
           systemProgram: anchor.web3.SystemProgram.programId,
