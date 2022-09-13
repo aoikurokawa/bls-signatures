@@ -76,9 +76,7 @@ describe("Voting", () => {
     });
 
     it("Vote", async () => {
-      // const pollPDAKey = await votingW.findPollAddress(pollIndex);
-      // expect(pollPDAKey.toString()).to.equal(pollKey.toString());
-      const { payer, bump, votePdaKey } = await votingW.votePoll();
+      const { payer, bump, votePdaKey } = await votingW.votePoll(pollKey);
 
       await votingW.program.methods
         .votePoll(bump, payer, ONE)
@@ -93,8 +91,8 @@ describe("Voting", () => {
       const voteData = await votingW.fetchVote(votePdaKey);
 
       expect(voteData.bump).to.equal(bump);
-      expect(voteData.optionSelected).to.equal(ONE);
-      expect(voteData.poll.toString()).to.equal(votePdaKey.toString());
+      expect(voteData.optionSelected.toString()).to.equal(ONE.toString());
+      expect(voteData.poll.toString()).to.equal(pollKey.toString());
       expect(voteData.voter.toString()).to.equal(payer.toString());
     });
   });

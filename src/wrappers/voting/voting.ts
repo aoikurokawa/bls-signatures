@@ -80,14 +80,10 @@ export class VotingWrapper {
    * Vote
    * @returns Promise<Vote>
    */
-  async votePoll(): Promise<Vote> {
+  async votePoll(pollKey: PublicKey): Promise<Vote> {
     const { provider } = this.sdk;
-    const pollCountData = await this.reload();
-    const index = new u64(pollCountData.proposalCount);
-    const [pollPdaKey, _pollBump] = await findPollAddress(index);
-
     const [votePdaKey, voteBump] = await findVoteAddress(
-      pollPdaKey,
+      pollKey,
       provider.wallet.publicKey
     );
 
