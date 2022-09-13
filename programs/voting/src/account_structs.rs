@@ -45,8 +45,10 @@ pub struct CreatePoll<'info> {
 #[derive(Accounts)]
 #[instruction(bump: u8, voter: Pubkey)]
 pub struct VotePoll<'info> {
-    #[account(mut)]
+    /// Poll being voted on
     pub poll: Account<'info, Poll>,
+
+    /// The vote
     #[account(
         init, 
         seeds = [
@@ -59,7 +61,11 @@ pub struct VotePoll<'info> {
         space = Vote::LEN
     )]
     pub vote: Account<'info, Vote>, 
+
+    /// Payer of the Vote
     #[account(mut)]
     pub payer: Signer<'info>,
+
+    /// System program
     pub system_program: Program<'info, System>,
 }

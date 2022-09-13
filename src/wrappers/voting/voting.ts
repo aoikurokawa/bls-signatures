@@ -84,16 +84,16 @@ export class VotingWrapper {
     const { provider } = this.sdk;
     const pollCountData = await this.reload();
     const index = new u64(pollCountData.proposalCount);
-    const [poll, _bump] = await findPollAddress(index);
+    const [pollPdaKey, _pollBump] = await findPollAddress(index);
 
-    const [votePdaKey, bump] = await findVoteAddress(
-      poll,
+    const [votePdaKey, voteBump] = await findVoteAddress(
+      pollPdaKey,
       provider.wallet.publicKey
     );
 
     return {
       payer: provider.wallet.publicKey,
-      bump,
+      bump: voteBump,
       votePdaKey,
     };
   }

@@ -80,15 +80,12 @@ describe("Voting", () => {
       // expect(pollPDAKey.toString()).to.equal(pollKey.toString());
       const { payer, bump, votePdaKey } = await votingW.votePoll();
 
-      console.log("PollPDAKey: ", pollKey.toString());
-      console.log("VotePDAKey: ", votePdaKey.toString());
-
       await votingW.program.methods
         .votePoll(bump, payer, ONE)
         .accounts({
           poll: pollKey,
           vote: votePdaKey,
-          payer,
+          payer: votingW.provider.wallet.publicKey,
           systemProgram: anchor.web3.SystemProgram.programId,
         })
         .rpc();
