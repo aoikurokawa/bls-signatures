@@ -1,10 +1,5 @@
 use crate::*;
 
-// #[event]
-// pub struct PollCounterCreaterEvent {
-//     #[index]
-//     pub
-// }
 #[event]
 pub struct PollCreateEvent {
     /// The poll being created

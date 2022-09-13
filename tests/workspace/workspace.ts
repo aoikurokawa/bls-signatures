@@ -1,12 +1,10 @@
 import * as anchor from "@project-serum/anchor";
 import { SolanaProvider } from "@saberhq/solana-contrib";
-import { Keypair, PublicKey } from "@solana/web3.js";
+import { Keypair } from "@solana/web3.js";
 import { u64 } from "@saberhq/token-utils";
 
 import { MyKheSDK } from "../../src";
-import { findPollCountAddress, VotingWrapper } from "../../src/wrappers";
-import { MYKHE_ADDRESS } from "../../src";
-import { expectTX } from "../../src/utils";
+import { VotingWrapper } from "../../src/wrappers";
 
 export const ZERO = new u64(0);
 export const ONE = new u64(1);
