@@ -1,25 +1,16 @@
 import * as anchor from "@project-serum/anchor";
-import { Program } from "@project-serum/anchor";
 import { PublicKey } from "@solana/web3.js";
-import { assert, expect } from "chai";
+import { expect } from "chai";
 import invariant from "tiny-invariant";
 
-import { Voting } from "../target/types/voting";
-import { MYKHE_ADDRESS } from "../src/constants";
 import { makeSDK, ONE, setupPollCount, ZERO } from "./workspace";
-import {
-  findPollAddress,
-  findPollCountAddress,
-  findVoteAddress,
-  VotingWrapper,
-} from "../src";
+import { findPollAddress, findPollCountAddress, VotingWrapper } from "../src";
 
 describe("Voting", () => {
   const sdk = makeSDK();
 
   let votingW: VotingWrapper;
   let countDataPda: PublicKey;
-  let countDatabump: number;
 
   before(async () => {
     const { votingWrapper } = await setupPollCount({ sdk });
@@ -61,12 +52,9 @@ describe("Voting", () => {
     });
 
     it("Poll as initialized", async () => {
-      const proposer = sdk.provider.wallet.publicKey;
-      const { pollCountKey } = votingW;
       const [expectedPollKey, bump] = await findPollAddress(pollIndex);
       expect(pollKey.toString()).to.equal(expectedPollKey.toString());
 
-      const pollCountData = await votingW.data();
       const pollData = await votingW.findPollByKey(pollKey);
       expect(pollData.bump).to.equal(bump);
       expect(pollData.index.toString()).to.equal(pollIndex.toString());
