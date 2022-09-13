@@ -64,5 +64,5 @@ pub struct Vote {
 }
 
 impl Vote {
-    pub const LEN: usize = 8 + 1 + PUBKEY_BYTES + 1 + 1;
+    pub const LEN: usize = 8 + PUBKEY_BYTES + PUBKEY_BYTES + 1 + 1;
 }

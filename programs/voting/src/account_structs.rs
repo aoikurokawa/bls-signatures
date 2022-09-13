@@ -45,6 +45,7 @@ pub struct CreatePoll<'info> {
 #[derive(Accounts)]
 #[instruction(bump: u8, voter: Pubkey)]
 pub struct VotePoll<'info> {
+    #[account(mut)]
     pub poll: Account<'info, Poll>,
     #[account(
         init, 

@@ -9,6 +9,7 @@ import { MYKHE_ADDRESS } from "../../src";
 import { expectTX } from "../../src/utils";
 
 export const ZERO = new u64(0);
+export const ONE = new u64(1);
 
 export const makeSDK = (): MyKheSDK => {
   const anchorProvider = anchor.AnchorProvider.env();

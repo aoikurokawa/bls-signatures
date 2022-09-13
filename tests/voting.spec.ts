@@ -6,7 +6,7 @@ import invariant from "tiny-invariant";
 
 import { Voting } from "../target/types/voting";
 import { MYKHE_ADDRESS } from "../src/constants";
-import { makeSDK, setupPollCount, ZERO } from "./workspace";
+import { makeSDK, ONE, setupPollCount, ZERO } from "./workspace";
 import {
   findPollAddress,
   findPollCountAddress,
@@ -76,13 +76,17 @@ describe("Voting", () => {
     });
 
     it("Vote", async () => {
-      const pollPDAKey = await votingW.findPollAddress(pollIndex);
+      // const pollPDAKey = await votingW.findPollAddress(pollIndex);
+      // expect(pollPDAKey.toString()).to.equal(pollKey.toString());
       const { payer, bump, votePdaKey } = await votingW.votePoll();
 
+      console.log("PollPDAKey: ", pollKey.toString());
+      console.log("VotePDAKey: ", votePdaKey.toString());
+
       await votingW.program.methods
-        .votePoll(bump, payer, 1)
+        .votePoll(bump, payer, ONE)
         .accounts({
-          poll: pollPDAKey,
+          poll: pollKey,
           vote: votePdaKey,
           payer,
           systemProgram: anchor.web3.SystemProgram.programId,
@@ -92,7 +96,7 @@ describe("Voting", () => {
       const voteData = await votingW.fetchVote(votePdaKey);
 
       expect(voteData.bump).to.equal(bump);
-      expect(voteData.optionSelected).to.equal(1);
+      expect(voteData.optionSelected).to.equal(ONE);
       expect(voteData.poll.toString()).to.equal(votePdaKey.toString());
       expect(voteData.voter.toString()).to.equal(payer.toString());
     });
