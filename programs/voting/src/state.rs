@@ -27,6 +27,17 @@ pub struct Poll {
     pub for_votes: u64,
     /// Current number of votes in opposition to this proposal
     pub against_votes: u64,
+
+    /// The timestamp when the poll was canceled
+    pub canceled_at: i64,
+    /// The timestamp when the proposal was created
+    pub created_at: i64,
+    /// The timestamp in which the poll was activated
+    /// This is when voting begins
+    pub activated_at: i64,
+    /// The timestamp when voting ends
+    /// This only applies to activate proposal
+    pub voting_ends_at: i64,
 }
 
 impl Poll {

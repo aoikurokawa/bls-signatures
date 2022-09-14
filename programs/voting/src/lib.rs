@@ -35,6 +35,10 @@ pub mod voting {
             proposer: ctx.accounts.payer.key(),
             for_votes: 0,
             against_votes: 0,
+            created_at: Clock::get()?.unix_timestamp,
+            activated_at: 0,
+            canceled_at: 0,
+            voting_ends_at: 0,
         };
         poll.set_inner(new_poll);
 
