@@ -50,6 +50,10 @@ pub struct PollMeta {
     pub description_link: String,
 }
 
+impl PollMeta {
+    pub const LEN: usize = PUBKEY_BYTES;
+}
+
 #[account]
 pub struct Vote {
     ///  The poll being voted on

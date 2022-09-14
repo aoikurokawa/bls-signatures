@@ -43,11 +43,31 @@ pub struct CreatePoll<'info> {
 }
 
 #[derive(Accounts)]
+#[instruction(bump: u8, title: String, desctiption_link: String)]
 pub struct CreatePollMeta<'info> {
     /// The [Poll]
     pub poll: Account<'info, Poll>,
     /// Proposer of the poll
     pub proposer: Signer<'info>,
+    /// The [PollMeta]
+    #[account(
+        init,
+        seeds = [
+            b"my_khe_proposal_meta".as_ref(),
+            poll.key().as_ref()
+        ],
+        bump,
+        payer = payer,
+        space = PollMeta::LEN
+            + 4 + title.as_bytes().len() 
+            + 4 + desctiption_link.as_bytes().len() 
+    )]
+    pub poll_meta: Account<'info, PollMeta>,
+    /// Payer of the [PollMeta]
+    #[account(mut)]
+    pub payer: Signer<'info>,
+    /// System Program
+    pub system_program: Program<'info, System>,
 }
 
 #[derive(Accounts)]
