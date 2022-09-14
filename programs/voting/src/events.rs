@@ -8,3 +8,11 @@ pub struct PollCreateEvent {
     /// The index of the [Proposal]
     pub index: u64,
 }
+
+#[event]
+pub struct PollActivateEvent {
+    /// The poll being created
+    #[index]
+    pub poll: Pubkey,
+    pub voting_ends_at: i64,
+}

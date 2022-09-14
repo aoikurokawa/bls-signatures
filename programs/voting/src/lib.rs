@@ -68,9 +68,15 @@ pub mod voting {
             None => return Err(ConvertError.into()),
         };
 
+        emit!(PollActivateEvent {
+            poll: poll.key(),
+            voting_ends_at: poll.voting_ends_at
+        });
+
         Ok(())
     }
 
+    /// Creates a [CreatePollMeta]
     pub fn create_poll_meta(
         ctx: Context<CreatePollMeta>,
         _bump: u8,
