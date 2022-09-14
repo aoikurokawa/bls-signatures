@@ -1,10 +1,13 @@
 use anchor_lang::prelude::*;
+use num_traits::cast::ToPrimitive;
 
 mod account_structs;
+mod errors;
 mod events;
 mod state;
 
 use account_structs::*;
+use errors::ErrorCode::ConvertError;
 use events::*;
 use state::*;
 
@@ -48,6 +51,22 @@ pub mod voting {
             poll: poll.key(),
             index: poll.index,
         });
+
+        Ok(())
+    }
+
+    /// Activates a poll
+    pub fn activate_poll(ctx: Context<ActivatePoll>) -> Result<()> {
+        let poll = &mut ctx.accounts.poll;
+        let now = Clock::get()?.unix_timestamp;
+        poll.activated_at = now;
+        poll.voting_ends_at = match PollCount::VOTING_PERIOD
+            .to_i64()
+            .and_then(|v: i64| now.checked_add(v))
+        {
+            Some(n) => n,
+            None => return Err(ConvertError.into()),
+        };
 
         Ok(())
     }
