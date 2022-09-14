@@ -43,6 +43,14 @@ pub struct CreatePoll<'info> {
 }
 
 #[derive(Accounts)]
+pub struct CreatePollMeta<'info> {
+    /// The [Poll]
+    pub poll: Account<'info, Poll>,
+    /// Proposer of the poll
+    pub proposer: Signer<'info>,
+}
+
+#[derive(Accounts)]
 #[instruction(bump: u8, voter: Pubkey)]
 pub struct VotePoll<'info> {
     /// Poll being voted on

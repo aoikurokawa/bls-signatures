@@ -55,6 +55,10 @@ pub mod voting {
         Ok(())
     }
 
+    pub fn create_poll_meta(ctx: Context<CreatePollMeta>) -> Result<()> {
+        Ok(())
+    }
+
     pub fn vote_poll(ctx: Context<VotePoll>, bump: u8, voter: Pubkey, option: u8) -> Result<()> {
         let vote = &mut ctx.accounts.vote;
         let new_vote = Vote {

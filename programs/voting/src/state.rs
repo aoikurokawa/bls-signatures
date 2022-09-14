@@ -40,6 +40,17 @@ impl Poll {
 }
 
 #[account]
+#[derive(Debug, Default)]
+pub struct PollMeta {
+    /// The [Poll]
+    pub poll: Pubkey,
+    /// Title of the poll
+    pub title: String,
+    /// Link to a description of the poll
+    pub description_link: String,
+}
+
+#[account]
 pub struct Vote {
     ///  The poll being voted on
     pub poll: Pubkey,
