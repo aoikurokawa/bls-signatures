@@ -43,7 +43,7 @@ pub struct CreatePoll<'info> {
 }
 
 #[derive(Accounts)]
-#[instruction(bump: u8, title: String, desctiption_link: String)]
+#[instruction(_bump: u8, title: String, desctiption_link: String)]
 pub struct CreatePollMeta<'info> {
     /// The [Poll]
     pub poll: Account<'info, Poll>,

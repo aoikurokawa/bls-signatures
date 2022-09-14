@@ -55,7 +55,19 @@ pub mod voting {
         Ok(())
     }
 
-    pub fn create_poll_meta(ctx: Context<CreatePollMeta>) -> Result<()> {
+    pub fn create_poll_meta(
+        ctx: Context<CreatePollMeta>,
+        _bump: u8,
+        title: String,
+        description_link: String,
+    ) -> Result<()> {
+        let poll_meta = &mut ctx.accounts.poll_meta;
+        let new_poll_meta = PollMeta {
+            poll: ctx.accounts.poll.key(),
+            title,
+            description_link,
+        };
+        poll_meta.set_inner(new_poll_meta);
         Ok(())
     }
 
