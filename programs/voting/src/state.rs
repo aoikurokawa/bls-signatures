@@ -27,12 +27,6 @@ pub struct Poll {
     pub for_votes: u64,
     /// Current number of votes in opposition to this proposal
     pub against_votes: u64,
-
-    /// Title of the poll
-    pub title: String,
-
-    /// Link to description of the proposal
-    pub desctiption_link: String,
 }
 
 impl Poll {

@@ -20,7 +20,7 @@ pub struct Initialize<'info> {
 }
 
 #[derive(Accounts)]
-#[instruction(bump: u8, title: String, desctiption_link: String)]
+#[instruction(bump: u8)]
 pub struct CreatePoll<'info> {
     #[account(mut)]
     pub count_data: Account<'info, PollCount>,
@@ -33,8 +33,6 @@ pub struct CreatePoll<'info> {
         bump,
         payer = payer, 
         space = Poll::LEN 
-            + 4 + title.as_bytes().len() 
-            + 4 + desctiption_link.as_bytes().len() 
     )]
     pub poll: Account<'info, Poll>,
     #[account(mut)]

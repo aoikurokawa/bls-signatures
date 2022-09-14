@@ -25,12 +25,7 @@ pub mod voting {
         Ok(())
     }
 
-    pub fn create_poll(
-        ctx: Context<CreatePoll>,
-        bump: u8,
-        title: String,
-        desctiption_link: String,
-    ) -> Result<()> {
+    pub fn create_poll(ctx: Context<CreatePoll>, bump: u8) -> Result<()> {
         let count_data = &mut ctx.accounts.count_data;
 
         let poll = &mut ctx.accounts.poll;
@@ -40,8 +35,6 @@ pub mod voting {
             proposer: ctx.accounts.payer.key(),
             for_votes: 0,
             against_votes: 0,
-            title,
-            desctiption_link,
         };
         poll.set_inner(new_poll);
 
