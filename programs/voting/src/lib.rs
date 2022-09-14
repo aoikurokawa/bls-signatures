@@ -76,6 +76,19 @@ pub mod voting {
         Ok(())
     }
 
+    /// Cancel a poll.
+    pub fn cancel_poll(ctx: Context<CancelPoll>) -> Result<()> {
+        let poll = &mut ctx.accounts.poll;
+        poll.canceled_at = Clock::get()?.unix_timestamp;
+
+        emit!(PollCancelEvent {
+            poll: poll.key(),
+            voting_cancel_at: poll.canceled_at,
+        });
+
+        Ok(())
+    }
+
     /// Creates a [CreatePollMeta]
     pub fn create_poll_meta(
         ctx: Context<CreatePollMeta>,

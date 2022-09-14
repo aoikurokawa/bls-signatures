@@ -16,3 +16,11 @@ pub struct PollActivateEvent {
     pub poll: Pubkey,
     pub voting_ends_at: i64,
 }
+
+#[event]
+pub struct PollCancelEvent {
+    /// The poll being created
+    #[index]
+    pub poll: Pubkey,
+    pub voting_cancel_at: i64,
+}
