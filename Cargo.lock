@@ -715,6 +715,9 @@ dependencies = [
 [[package]]
 name = "locked-voter"
 version = "0.1.0"
+dependencies = [
+ "anchor-lang",
+]
 
 [[package]]
 name = "log"

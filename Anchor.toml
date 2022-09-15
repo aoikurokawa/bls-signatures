@@ -11,6 +11,7 @@ wallet = "./tests/test-key.json"
 
 [programs.localnet]
 voting = "Fx2TKLRC5V8Xu6R1w42C6k7NUXr35qVudXX86jk6RVky"
+locked_voter = "G8BgM1hwZjPWv8jkJhwpj1WKVneuUUuK9QKXDJxJtX2u"
 
 [registry]
 url = "https://anchor.projectserum.com"
