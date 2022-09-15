@@ -1,7 +1,7 @@
 use anchor_lang::prelude::*;
 
 #[account]
-pub struct Lock {
+pub struct Locker {
     /// Base account used to generate signer seeds
     pub base: Pubkey,
     /// Bump seed

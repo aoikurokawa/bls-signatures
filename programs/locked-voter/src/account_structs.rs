@@ -6,13 +6,13 @@ pub struct NewLock<'info> {
     #[account(
         init,
         seeds = [
-            b"my_khe_lock".as_ref(),
+            b"my_khe_locker".as_ref(),
         ],
         bump,
         payer = payer,
         space = 8
     )]
-    pub lock: Account<'info, Lock>,
+    pub locker: Account<'info, Locker>,
 
     /// Mint of the token that can be used to join the [Lock]
     pub token_mint: Account<'info, Mint>,
@@ -24,7 +24,7 @@ pub struct NewLock<'info> {
 
 #[derive(Accounts)]
 pub struct NewEscrow<'info> {
-    pub lock: Account<'info, Lock>,
+    pub locker: Account<'info, Locker>,
 
     #[account(
         init,
@@ -45,4 +45,9 @@ pub struct NewEscrow<'info> {
     pub payer: Signer<'info>,
 
     pub system_program: Program<'info, System>,
+}
+
+#[derive(Accounts)]
+pub struct Lock<'info> {
+
 }

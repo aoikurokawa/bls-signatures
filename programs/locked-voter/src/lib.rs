@@ -13,16 +13,16 @@ declare_id!("G8BgM1hwZjPWv8jkJhwpj1WKVneuUUuK9QKXDJxJtX2u");
 pub mod locked_voter {
     use super::*;
 
-    pub fn new_lock(ctx: Context<NewLock>, bump: u8) -> Result<()> {
-        let lock_acc = &mut ctx.accounts.lock;
+    pub fn new_locker(ctx: Context<NewLock>, bump: u8) -> Result<()> {
+        let locker_acc = &mut ctx.accounts.locker;
 
-        let lock = Lock {
+        let locker = Locker {
             base: ctx.accounts.base.key(),
             bump,
             token_mint: ctx.accounts.token_mint.key(),
         };
 
-        lock_acc.set_inner(lock);
+        locker_acc.set_inner(lock);
 
         Ok(())
     }
@@ -45,6 +45,10 @@ pub mod locked_voter {
 
         escrow.set_inner(new_escrow);
 
+        Ok(())
+    }
+
+    pub fn lock(ctx: Context<Lock>) -> Result<()> {
         Ok(())
     }
 }
