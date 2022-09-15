@@ -27,7 +27,22 @@ pub mod locked_voter {
         Ok(())
     }
 
-    pub fn new_escrow(ctx: Context<NewEscrow>) -> Result<()> {
+    pub fn new_escrow(ctx: Context<NewEscrow>, bump: u8) -> Result<()> {
+        let escrow = &mut ctx.accounts.escrow;
+
+        let new_escrow = Escrow {
+            lock: ctx.accounts.lock.key(),
+            owner: ctx.accounts.escrow_owner.key(),
+            bump,
+            tokens: anchor_spl::associated_token::get_associated_token_address(
+                &escrow.key(),
+                &ctx.accounts.lock.token_mint,
+            ),
+            amount: 1,
+        };
+
+        escrow.set_inner(new_escrow);
+
         Ok(())
     }
 }
