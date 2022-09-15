@@ -12,7 +12,7 @@ pub struct NewLock<'info> {
         ],
         bump,
         payer = payer,
-        space = 8
+        space = 8 + Locker::LEN
     )]
     pub locker: Account<'info, Locker>,
 

@@ -12,6 +12,10 @@ pub struct Locker {
     pub token_mint: Pubkey,
 }
 
+impl Locker {
+    pub const LEN: usize = PUBKEY_BYTES + 1 + PUBKEY_BYTES;
+}
+
 #[account]
 pub struct Escrow {
     /// The [Lock] that this [Escrow] is part of
