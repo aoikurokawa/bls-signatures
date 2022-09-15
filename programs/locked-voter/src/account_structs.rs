@@ -36,7 +36,7 @@ pub struct NewEscrow<'info> {
         ],
         bump,
         payer = payer,
-        space = 8
+        space = 8 + Escrow::LEN
     )]
     pub escrow: Account<'info, Escrow>,
 
