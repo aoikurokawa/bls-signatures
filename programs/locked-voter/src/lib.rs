@@ -39,6 +39,8 @@ pub mod locked_voter {
                 &ctx.accounts.lock.token_mint,
             ),
             amount: 1,
+            escrow_started_at: 0,
+            escrow_ends_at: 0,
         };
 
         escrow.set_inner(new_escrow);

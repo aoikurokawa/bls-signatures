@@ -26,4 +26,10 @@ pub struct Escrow {
 
     /// Amount of tokens staked
     pub amount: u64,
+
+    /// When the [Escrow::owner] started their escrow
+    pub escrow_started_at: i64,
+
+    /// When the escrow unlocks; i.e. the [Escrow::owner] is scheduled to be allowed to withdraw their tokens
+    pub escrow_ends_at: i64,
 }
