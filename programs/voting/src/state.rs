@@ -10,7 +10,7 @@ pub struct PollCount {
 
 impl PollCount {
     pub const LEN: usize = 8 + 1 + 1;
-    pub const VOTING_PERIOD: u64 = 604800;
+    pub const VOTING_PERIOD: u64 = 604800; // 1 week
 }
 
 #[account]

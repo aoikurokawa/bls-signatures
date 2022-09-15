@@ -42,6 +42,7 @@ pub struct Escrow {
 
 impl Escrow {
     pub const LEN: usize = PUBKEY_BYTES + PUBKEY_BYTES + 1 + PUBKEY_BYTES + 8 + 8 + 8;
+    pub const STAKE_DURATION: i64 = 31556926; // 1 year
 
     pub fn record_lock_event(
         &mut self,

@@ -49,6 +49,13 @@ pub mod locked_voter {
     }
 
     pub fn lock(ctx: Context<Lock>) -> Result<()> {
+        let next_escrow_started_at = Clock::get()?.unix_timestamp;
+        let next_escrow_ends_at = Escrow::STAKE_DURATION
+            .checked_add(next_escrow_started_at)
+            .unwrap_or(next_escrow_started_at);
+
+        let escrow = &mut ctx.accounts.escrow;
+        escrow.record_lock_event(next_escrow_started_at, next_escrow_ends_at)?;
         Ok(())
     }
 }
