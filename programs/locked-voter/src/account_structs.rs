@@ -30,7 +30,7 @@ pub struct NewEscrow<'info> {
         init,
         seeds = [
             b"my_khe_escrow".as_ref(),
-            lock.key().to_bytes().as_ref(),
+            locker.key().to_bytes().as_ref(),
         ],
         bump,
         payer = payer,
@@ -49,5 +49,10 @@ pub struct NewEscrow<'info> {
 
 #[derive(Accounts)]
 pub struct Lock<'info> {
-
+    /// [Locker]
+    #[account(mut)]
+    pub locker: Account<'info, Locker>,
+    /// [Escrow]
+    #[account(mut)]
+    pub escrow: Account<'info, Escrow>,
 }

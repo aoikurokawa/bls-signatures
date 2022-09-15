@@ -22,7 +22,7 @@ pub mod locked_voter {
             token_mint: ctx.accounts.token_mint.key(),
         };
 
-        locker_acc.set_inner(lock);
+        locker_acc.set_inner(locker);
 
         Ok(())
     }
@@ -31,12 +31,12 @@ pub mod locked_voter {
         let escrow = &mut ctx.accounts.escrow;
 
         let new_escrow = Escrow {
-            lock: ctx.accounts.lock.key(),
+            lock: ctx.accounts.locker.key(),
             owner: ctx.accounts.escrow_owner.key(),
             bump,
             tokens: anchor_spl::associated_token::get_associated_token_address(
                 &escrow.key(),
-                &ctx.accounts.lock.token_mint,
+                &ctx.accounts.locker.token_mint,
             ),
             amount: 1,
             escrow_started_at: 0,
