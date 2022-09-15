@@ -31,7 +31,7 @@ pub mod locked_voter {
         let escrow = &mut ctx.accounts.escrow;
 
         let new_escrow = Escrow {
-            lock: ctx.accounts.locker.key(),
+            locker: ctx.accounts.locker.key(),
             owner: ctx.accounts.escrow_owner.key(),
             bump,
             tokens: anchor_spl::associated_token::get_associated_token_address(

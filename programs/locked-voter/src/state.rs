@@ -13,7 +13,7 @@ pub struct Locker {
 #[account]
 pub struct Escrow {
     /// The [Lock] that this [Escrow] is part of
-    pub lock: Pubkey,
+    pub locker: Pubkey,
 
     /// The key of the account that is authorized to stake into/withdraw from this [Escrow]
     pub owner: Pubkey,

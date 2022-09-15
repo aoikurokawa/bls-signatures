@@ -1,3 +1,5 @@
+use anchor_spl::token::{Token, TokenAccount};
+
 use crate::*;
 
 #[derive(Accounts)]
@@ -52,7 +54,25 @@ pub struct Lock<'info> {
     /// [Locker]
     #[account(mut)]
     pub locker: Account<'info, Locker>,
+
     /// [Escrow]
-    #[account(mut)]
+    #[account(mut, has_one = locker)]
     pub escrow: Account<'info, Escrow>,
+
+    /// Token account held by the [Escrow]
+    #[account(
+        mut,
+        constraint = escrow.tokens == escrow_tokens.key()
+    )]
+    pub escrow_tokens: Account<'info, TokenAccount>,
+
+    /// Authority of the [Escrow] and [Self::source_tokens]
+    pub escrow_owner: Signer<'info>,
+
+    /// The source of deposited tokens
+    #[account(mut)]
+    pub source_tokens: Account<'info, TokenAccount>,
+
+    /// Token program
+    pub token_program: Program<'info, Token>,
 }
