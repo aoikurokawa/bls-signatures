@@ -3,6 +3,14 @@ use anchor_lang::solana_program::pubkey::PUBKEY_BYTES;
 use crate::*;
 
 #[account]
+pub struct StakePool {
+    pub bump: u8,
+    pub authority: Pubkey,
+    pub requires_creator: Pubkey,
+    pub total_staked: u32,
+}
+
+#[account]
 pub struct Locker {
     /// Base account used to generate signer seeds
     pub base: Pubkey,

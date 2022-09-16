@@ -3,6 +3,7 @@ use anchor_spl::token::{transfer, Mint};
 
 mod account_structs;
 mod state;
+mod instructions;
 
 pub use account_structs::*;
 pub use state::*;
