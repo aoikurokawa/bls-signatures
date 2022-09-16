@@ -1,5 +1,5 @@
 use anchor_lang::prelude::*;
-use anchor_spl::token::Mint;
+use anchor_spl::token::{transfer, Mint};
 
 mod account_structs;
 mod state;
@@ -11,6 +11,8 @@ declare_id!("G8BgM1hwZjPWv8jkJhwpj1WKVneuUUuK9QKXDJxJtX2u");
 
 #[program]
 pub mod locked_voter {
+    use anchor_spl::token::Transfer;
+
     use super::*;
 
     pub fn new_locker(ctx: Context<NewLock>, bump: u8) -> Result<()> {
@@ -53,6 +55,18 @@ pub mod locked_voter {
         let next_escrow_ends_at = Escrow::STAKE_DURATION
             .checked_add(next_escrow_started_at)
             .unwrap_or(next_escrow_started_at);
+
+        transfer(
+            CpiContext::new(
+                ctx.accounts.token_program.to_account_info(),
+                Transfer {
+                    from: ctx.accounts.source_tokens.to_account_info(),
+                    to: ctx.accounts.escrow_tokens.to_account_info(),
+                    authority: ctx.accounts.escrow_owner.to_account_info(),
+                },
+            ),
+            1,
+        )?;
 
         let escrow = &mut ctx.accounts.escrow;
         escrow.record_lock_event(next_escrow_started_at, next_escrow_ends_at)?;
