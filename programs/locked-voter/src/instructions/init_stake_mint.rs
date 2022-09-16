@@ -9,7 +9,10 @@ use {
 };
 
 use anchor_lang::solana_program::{program::invoke_signed, program_pack::Pack};
-use anchor_spl::associated_token;
+use anchor_spl::{
+    associated_token,
+    token::{mint_to, MintTo},
+};
 use mpl_token_metadata::{
     instruction::create_metadata_accounts_v2,
     state::{Creator, Metadata},
@@ -146,10 +149,22 @@ pub fn handler(ctx: Context<InitStakeMint>, name: String, symbol: String) -> Res
             ctx.accounts.payer.to_account_info(),
             ctx.accounts.system_program.to_account_info(),
             ctx.accounts.rent.to_account_info(),
-
         ],
         stake_pool_signer,
     )?;
+
+    //
+    let cpi_accounts = MintTo {
+        mint: ctx.accounts.vault_mint.to_account_info(),
+        to: ctx
+            .accounts
+            .stake_entry_vault_mint_token_account
+            .to_account_info(),
+        authority: ctx.accounts.stake_pool.to_account_info(),
+    };
+    let cpi_program = ctx.accounts.token_program.to_account_info();
+    let cpi_context = CpiContext::new(cpi_program, cpi_accounts);
+    mint_to(cpi_context, 1)?;
 
     Ok(())
 }
