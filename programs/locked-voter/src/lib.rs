@@ -1,15 +1,15 @@
 use anchor_lang::prelude::*;
-use anchor_spl::token::{Transfer, transfer, Mint};
+use anchor_spl::token::{transfer, Mint, Transfer};
 
 mod account_structs;
+mod errors;
 mod instructions;
 mod state;
-mod errors;
 
 pub use account_structs::*;
-pub use state::*;
-pub use instructions::*;
 pub use errors::*;
+pub use instructions::*;
+pub use state::*;
 
 declare_id!("G8BgM1hwZjPWv8jkJhwpj1WKVneuUUuK9QKXDJxJtX2u");
 
@@ -20,6 +20,10 @@ pub mod locked_voter {
 
     pub fn init_pool(ctx: Context<InitPool>, bump: u8) -> Result<()> {
         instructions::init_pool::handler(ctx, bump)
+    }
+
+    pub fn init_entry(ctx: Context<InitEntry>, bump: u8) -> Result<()> {
+        instructions::init_entry::handler(ctx, bump)
     }
 
     pub fn new_locker(ctx: Context<NewLock>, bump: u8) -> Result<()> {
