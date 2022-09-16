@@ -9,6 +9,7 @@ use {
 };
 
 use anchor_lang::solana_program::program_pack::Pack;
+use anchor_spl::associated_token;
 
 use crate::*;
 
@@ -78,6 +79,20 @@ pub fn handler(ctx: Context<InitStakeMint>) -> Result<()> {
         &ctx.accounts.stake_pool.key(),
         Some(&ctx.accounts.stake_pool.key()),
     )?;
+
+    // crate associated token account for stake_entry
+    let cpi_accounts = associated_token::Create {
+        payer: ctx.accounts.payer.to_account_info(),
+        associated_token: ctx.accounts.associated_token.to_account_info(),
+        authority: stake_entry.to_account_info(),
+        mint: ctx.accounts.vault_mint.to_account_info(),
+        system_program: ctx.accounts.system_program.to_account_info(),
+        rent: ctx.accounts.rent.to_account_info(),
+        token_program: ctx.accounts.token_program.to_account_info(),
+    };
+    let cpi_program = ctx.accounts.token_program.to_account_info();
+    let cpi_context = CpiContext::new(cpi_program, cpi_accounts);
+    associated_token::create(cpi_context)?;
 
     Ok(())
 }
