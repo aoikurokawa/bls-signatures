@@ -41,6 +41,7 @@ pub fn handler(ctx: Context<InitEntry>, bump: u8) -> Result<()> {
         pool: ctx.accounts.stake_pool.key(),
         amount: 0,
         original_mint: ctx.accounts.original_mint.key(),
+        stake_mint: None,
     };
 
     stake_entry.set_inner(new_stake_entry);

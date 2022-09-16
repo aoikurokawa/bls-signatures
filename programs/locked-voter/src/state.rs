@@ -16,6 +16,7 @@ pub struct StakeEntry {
     pub pool: Pubkey,
     pub amount: u64,
     pub original_mint: Pubkey,
+    pub stake_mint: Option<Pubkey>,
 }
 
 #[account]
