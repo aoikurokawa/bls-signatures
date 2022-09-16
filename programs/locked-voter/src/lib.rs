@@ -72,4 +72,5 @@ pub mod locked_voter {
         escrow.record_lock_event(next_escrow_started_at, next_escrow_ends_at)?;
         Ok(())
     }
+
 }
