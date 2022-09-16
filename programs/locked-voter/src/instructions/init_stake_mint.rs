@@ -1,7 +1,10 @@
 use {
     anchor_lang::solana_program::program::invoke,
     anchor_lang::solana_program::system_instruction::create_account,
-    anchor_spl::{associated_token::AssociatedToken, token::Token},
+    anchor_spl::{
+        associated_token::AssociatedToken,
+        token::{initialize_mint, InitializeMint, Token},
+    },
     spl_token,
 };
 
@@ -63,5 +66,18 @@ pub fn handler(ctx: Context<InitStakeMint>) -> Result<()> {
     )?;
 
     // Initialize mint
+    let cpi_accounts = InitializeMint {
+        mint: ctx.accounts.vault_mint.to_account_info(),
+        rent: ctx.accounts.rent.to_account_info(),
+    };
+    let cpi_program = ctx.accounts.token_program.to_account_info();
+    let cpi_context = CpiContext::new(cpi_program, cpi_accounts);
+    initialize_mint(
+        cpi_context,
+        0,
+        &ctx.accounts.stake_pool.key(),
+        Some(&ctx.accounts.stake_pool.key()),
+    )?;
+
     Ok(())
 }
