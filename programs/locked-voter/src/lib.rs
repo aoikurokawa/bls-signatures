@@ -4,10 +4,12 @@ use anchor_spl::token::{Transfer, transfer, Mint};
 mod account_structs;
 mod instructions;
 mod state;
+mod errors;
 
 pub use account_structs::*;
 pub use state::*;
 pub use instructions::*;
+pub use errors::*;
 
 declare_id!("G8BgM1hwZjPWv8jkJhwpj1WKVneuUUuK9QKXDJxJtX2u");
 
