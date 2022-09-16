@@ -11,6 +11,14 @@ pub struct StakePool {
 }
 
 #[account]
+pub struct StakeEntry {
+    pub bump: u8,
+    pub pool: Pubkey,
+    pub amount: u64,
+    pub original_mint: Pubkey,
+}
+
+#[account]
 pub struct Locker {
     /// Base account used to generate signer seeds
     pub base: Pubkey,
