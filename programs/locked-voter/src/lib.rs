@@ -1,20 +1,24 @@
 use anchor_lang::prelude::*;
-use anchor_spl::token::{transfer, Mint};
+use anchor_spl::token::{Transfer, transfer, Mint};
 
 mod account_structs;
-mod state;
 mod instructions;
+mod state;
 
 pub use account_structs::*;
 pub use state::*;
+pub use instructions::*;
 
 declare_id!("G8BgM1hwZjPWv8jkJhwpj1WKVneuUUuK9QKXDJxJtX2u");
 
 #[program]
 pub mod locked_voter {
-    use anchor_spl::token::Transfer;
 
     use super::*;
+
+    pub fn init_pool(ctx: Context<InitPool>, bump: u8) -> Result<()> {
+        instructions::init_pool::handler(ctx, bump)
+    }
 
     pub fn new_locker(ctx: Context<NewLock>, bump: u8) -> Result<()> {
         let locker_acc = &mut ctx.accounts.locker;
@@ -73,5 +77,4 @@ pub mod locked_voter {
         escrow.record_lock_event(next_escrow_started_at, next_escrow_ends_at)?;
         Ok(())
     }
-
 }
