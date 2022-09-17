@@ -53,6 +53,7 @@ pub fn handler(ctx: Context<Stake>, amount: u64) -> Result<()> {
 
     token::transfer(cpi_context, amount)?;
 
+    // update stake_entry and stake_pool
     stake_entry.amount = stake_entry.amount.checked_add(amount).unwrap();
     stake_pool.total_staked = stake_pool.total_staked.checked_add(1).unwrap();
     Ok(())
