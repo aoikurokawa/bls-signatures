@@ -1,4 +1,4 @@
-use anchor_spl::token::TokenAccount;
+use anchor_spl::token::{TokenAccount, Token, self};
 
 use {
     crate::*
@@ -28,10 +28,32 @@ pub struct Stake<'info> {
 
     #[account(mut)]
     pub payer: Signer<'info>,
+    #[account(
+        mut,
+        constraint = payer_original_mint_token_account.amount > 0 &&
+            payer_original_mint_token_account.mint == stake_entry.original_mint && 
+            payer_original_mint_token_account.owner == payer.key(),
+    )]
+    pub payer_original_mint_token_account: Account<'info, TokenAccount>,
+    pub token_program: Program<'info, Token>,
 }
 
-pub fn handler(ctx: Context<Stake>) -> Result<()> {
+pub fn handler(ctx: Context<Stake>, amount: u64) -> Result<()> {
     let stake_entry = &mut ctx.accounts.stake_entry;
     let stake_pool = &mut ctx.accounts.stake_pool;
+
+    // transfer original mint
+    let cpi_accounts = Transfer {
+        from: ctx.accounts.payer_original_mint_token_account.to_account_info(),
+        to: ctx.accounts.stake_entry_original_token_account.to_account_info(),
+        authority: ctx.accounts.payer.to_account_info(),
+    };
+    let cpi_program = ctx.accounts.token_program.to_account_info();
+    let cpi_context = CpiContext::new(cpi_program, cpi_accounts);
+
+    token::transfer(cpi_context, amount)?;
+
+    stake_entry.amount = stake_entry.amount.checked_add(amount).unwrap();
+    stake_pool.total_staked = stake_pool.total_staked.checked_add(1).unwrap();
     Ok(())
 }
