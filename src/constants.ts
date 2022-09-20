@@ -10,7 +10,6 @@ export interface MyKhePrograms {
 
 export const MYKHE_ADDRESS = {
   Voting: new PublicKey("Fx2TKLRC5V8Xu6R1w42C6k7NUXr35qVudXX86jk6RVky"),
-  LockedVoting: new PublicKey("G8BgM1hwZjPWv8jkJhwpj1WKVneuUUuK9QKXDJxJtX2u"),
 };
 
 /**
