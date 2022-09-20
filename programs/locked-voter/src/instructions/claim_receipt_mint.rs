@@ -38,7 +38,7 @@ pub struct ClaimReceiptMint<'info> {
 
 pub fn handler(ctx: Context<ClaimReceiptMint>, amount: u64) -> Result<()> {
     let stake_entry = &mut ctx.accounts.stake_entry;
-    let user_pubkey = ctx.accounts.payer.key();
+    // let user_pubkey = ctx.accounts.payer.key();
     
     let stake_entry_seed = [STAKE_ENTRY_PREFIX.as_bytes()];
     let stake_entry_signer = &[&stake_entry_seed[..]];
