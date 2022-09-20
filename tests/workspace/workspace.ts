@@ -24,6 +24,12 @@ export const makeSDK = (): MyKheSDK => {
   });
 };
 
+export const getProvider = (): anchor.AnchorProvider => {
+  const anchorProvider = anchor.AnchorProvider.env();
+  anchor.setProvider(anchorProvider);
+  return anchorProvider;
+};
+
 export const setupPollCount = async ({
   sdk,
 }: {

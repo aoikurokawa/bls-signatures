@@ -1,6 +1,4 @@
-// import "chai-as-promised";
-
-import type { Idl } from "@project-serum/anchor";
+import { Idl, web3 } from "@project-serum/anchor";
 import type {
   PromiseOrValue,
   TransactionLike,
@@ -8,6 +6,7 @@ import type {
 } from "@saberhq/solana-contrib";
 import { confirmTransactionLike } from "@saberhq/solana-contrib";
 import { assert, expect } from "chai";
+import * as splToken from "@solana/spl-token";
 
 /**
  * Processes a transaction, expecting rejection or fulfillment.
@@ -51,4 +50,39 @@ export type IDLError = NonNullable<Idl["errors"]>[number];
 export const assertError = (error: IDLError, other: IDLError): void => {
   assert.strictEqual(error.code, other.code);
   assert.strictEqual(error.msg, other.msg);
+};
+
+/**
+ * Pay and create mint and token account
+ * @param connection
+ * @param creator
+ * @returns
+ */
+export const createMint = async (
+  connection: web3.Connection,
+  creator: web3.Keypair,
+  recipient: web3.PublicKey,
+  amount = 1,
+  freezeAuthority: web3.PublicKey = recipient,
+  mintAuthority: web3.PublicKey = creator.publicKey,
+  decimals?: number
+): Promise<[web3.PublicKey, splToken.Token]> => {
+  const fromAirdropSignature = await connection.requestAirdrop(
+    creator.publicKey,
+    web3.LAMPORTS_PER_SOL
+  );
+  await connection.confirmTransaction(fromAirdropSignature);
+  const mint = await splToken.Token.createMint(
+    connection,
+    creator,
+    mintAuthority,
+    freezeAuthority,
+    decimals ?? 0,
+    splToken.TOKEN_PROGRAM_ID
+  );
+  const tokenAccount = await mint.createAssociatedTokenAccount(recipient);
+  if (amount) {
+    await mint.mintTo(tokenAccount, creator.publicKey, [], amount);
+  }
+  return [tokenAccount, mint];
 };
