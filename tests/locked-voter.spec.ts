@@ -1,9 +1,15 @@
 import * as anchor from "@project-serum/anchor";
-import { Keypair, PublicKey } from "@solana/web3.js";
+import { Keypair, PublicKey, Transaction } from "@solana/web3.js";
 import type * as splToken from "@solana/spl-token";
+import {
+  SignerWallet,
+  SolanaProvider,
+  TransactionEnvelope,
+} from "@saberhq/solana-contrib";
+import { expectTX, expectTXTable } from "@saberhq/chai-solana";
 
 import { makeSDK, getProvider } from "./workspace";
-import { createMint } from "../src/utils";
+import { createMint, createMasterEditionIxs } from "../src/utils";
 
 describe("Create stake pool", () => {
   const sdk = makeSDK();
@@ -14,6 +20,7 @@ describe("Create stake pool", () => {
 
   before(async () => {
     const provider = getProvider();
+    // original mint
     [originalMintTokenAccountId, originalMint] = await createMint(
       provider.connection,
       originalMintAuthority,
@@ -22,8 +29,29 @@ describe("Create stake pool", () => {
       originalMintAuthority.publicKey
     );
 
-    // const ixs = await 
+    // master edition
+    const ixs = await createMasterEditionIxs(
+      originalMint.publicKey,
+      originalMintAuthority.publicKey
+    );
+    const txEnvelope = new TransactionEnvelope(
+      SolanaProvider.init({
+        connection: provider.connection,
+        wallet: new SignerWallet(originalMintAuthority),
+        opts: provider.opts,
+      }),
+      ixs
+    );
+    await expectTXTable(txEnvelope, "before", {
+      verbosity: "error",
+      formatLogs: true,
+    }).to.be.fulfilled;
   });
 
+  it("Create Pool", async () => {
+    const provider = getProvider();
+
+    let transactioin: Transaction;
+  });
   let base = Keypair.generate();
 });
