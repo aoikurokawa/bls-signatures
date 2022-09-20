@@ -7,6 +7,15 @@ import type {
 import { confirmTransactionLike } from "@saberhq/solana-contrib";
 import { assert, expect } from "chai";
 import * as splToken from "@solana/spl-token";
+import {
+  CreateMasterEditionV3,
+  CreateMetadataV2,
+  Creator,
+  DataV2,
+  MasterEdition,
+  Metadata,
+} from "@metaplex-foundation/mpl-token-metadata";
+import { BN } from "bn.js";
 
 /**
  * Processes a transaction, expecting rejection or fulfillment.
@@ -85,4 +94,54 @@ export const createMint = async (
     await mint.mintTo(tokenAccount, creator.publicKey, [], amount);
   }
   return [tokenAccount, mint];
+};
+
+/**
+ * Create instructions for master edition
+ * @param mintId
+ * @param tokenCreatorId
+ */
+export const createMasterEditionIxs = async (
+  mintId: web3.PublicKey,
+  tokenCreatorId: web3.PublicKey
+) => {
+  const metadataId = await Metadata.getPDA(mintId);
+  const metadataTx = new CreateMetadataV2(
+    { feePayer: tokenCreatorId },
+    {
+      metadata: metadataId,
+      metadataData: new DataV2({
+        name: "test",
+        symbol: "TST",
+        sellerFeeBasisPoints: 10,
+        uri: "https://test/",
+        creators: [
+          new Creator({
+            address: tokenCreatorId.toBase58(),
+            verified: true,
+            share: 100,
+          }),
+        ],
+        collection: null,
+        uses: null,
+      }),
+      updateAuthority: tokenCreatorId,
+      mint: mintId,
+      mintAuthority: tokenCreatorId,
+    }
+  );
+
+  const masterEditionId = await MasterEdition.getPDA(mintId);
+  const masterEditionTx = new CreateMasterEditionV3(
+    { feePayer: tokenCreatorId },
+    {
+      edition: masterEditionId,
+      metadata: metadataId,
+      updateAuthority: tokenCreatorId,
+      mint: mintId,
+      mintAuthority: tokenCreatorId,
+      maxSupply: new BN(1),
+    }
+  );
+  return [...metadataTx.instructions, ...masterEditionTx.instructions];
 };
