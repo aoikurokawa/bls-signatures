@@ -71,3 +71,11 @@ impl Escrow {
         Ok(())
     }
 }
+
+pub fn get_stake_seed(supply: u64, user: Pubkey) -> Pubkey {
+    if supply > 1 {
+        user
+    } else {
+        Pubkey::default()
+    }
+}

@@ -35,3 +35,11 @@ pub struct ClaimReceiptMint<'info> {
     pub system_program: Program<'info, System>,
     pub rent: Sysvar<'info, Rent>
 }
+
+pub fn handler(ctx: Context<ClaimReceiptMint>) -> Result<()> {
+    let stake_entry = &mut ctx.accounts.stake_entry;
+    let original_mint = stake_entry.original_mint;
+    let user_pubkey = ctx.accounts.payer.key();
+    let stake_pool = stake_entry.pool;
+    Ok(())
+}
