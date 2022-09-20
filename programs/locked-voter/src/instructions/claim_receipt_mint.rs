@@ -1,6 +1,6 @@
 use anchor_spl::{
     associated_token::AssociatedToken,
-    token::{TokenAccount, Token}
+    token::{TokenAccount, Token, self}
 };
 use crate::*;
 
@@ -36,10 +36,22 @@ pub struct ClaimReceiptMint<'info> {
     pub rent: Sysvar<'info, Rent>
 }
 
-pub fn handler(ctx: Context<ClaimReceiptMint>) -> Result<()> {
+pub fn handler(ctx: Context<ClaimReceiptMint>, amount: u64) -> Result<()> {
     let stake_entry = &mut ctx.accounts.stake_entry;
-    let original_mint = stake_entry.original_mint;
     let user_pubkey = ctx.accounts.payer.key();
-    let stake_pool = stake_entry.pool;
+    
+    let stake_entry_seed = [STAKE_ENTRY_PREFIX.as_bytes()];
+    let stake_entry_signer = &[&stake_entry_seed[..]];
+
+    let cpi_accounts = Transfer {
+        from: ctx.accounts.stake_entry_receipt_mint_token_account.to_account_info(),
+        to: ctx.accounts.user_receipt_mint_token_account.to_account_info(),
+        authority: stake_entry.to_account_info()
+    };
+    let cpi_program = ctx.accounts.token_program.to_account_info();
+    let cpi_context = CpiContext::new(cpi_program, cpi_accounts).with_signer(stake_entry_signer);
+    token::transfer(cpi_context, amount)?;
+
     Ok(())
+
 }

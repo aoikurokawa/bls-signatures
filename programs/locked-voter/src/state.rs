@@ -1,6 +1,7 @@
 use anchor_lang::solana_program::pubkey::PUBKEY_BYTES;
-
 use crate::*;
+
+pub const STAKE_ENTRY_PREFIX: &str = "my_khe_stake_entry";
 
 #[account]
 pub struct StakePool {
