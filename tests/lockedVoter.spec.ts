@@ -10,6 +10,7 @@ import { expectTX, expectTXTable } from "@saberhq/chai-solana";
 
 import { makeSDK, getProvider } from "./workspace";
 import { createMint, createMasterEditionIxs } from "../src/utils";
+import { createStakePool } from "../src/wrappers/locked-voter/locked-voter";
 
 describe("Create stake pool", () => {
   const sdk = makeSDK();
@@ -51,7 +52,18 @@ describe("Create stake pool", () => {
   it("Create Pool", async () => {
     const provider = getProvider();
 
-    let transactioin: Transaction;
+    let transaction: Transaction;
+    [transaction, stakePoolId] = await createStakePool(
+      provider.connection,
+      provider.wallet,
+      {}
+    );
+
+    await expectTXTable(
+      new TransactionEnvelope(SolanaProvider.init(provider), [
+        ...transaction.instructions,
+      ]),
+      "Create pool"
+    ).to.be.fulfilled;
   });
-  let base = Keypair.generate();
 });

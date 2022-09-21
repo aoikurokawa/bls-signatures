@@ -1,4 +1,5 @@
-import { Wallet, web3 } from "@project-serum/anchor";
+import type { Wallet } from "@saberhq/solana-contrib";
+import { web3 } from "@project-serum/anchor";
 import { initStakePool } from "./instruction";
 import { findStakePoolId } from "./pda";
 

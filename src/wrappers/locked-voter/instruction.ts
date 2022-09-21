@@ -1,4 +1,5 @@
-import { web3, Wallet, Program } from "@project-serum/anchor";
+import type { Wallet } from "@saberhq/solana-contrib";
+import { web3, Program } from "@project-serum/anchor";
 import { AnchorProvider } from "@project-serum/anchor/dist/esm";
 import {
   Connection,

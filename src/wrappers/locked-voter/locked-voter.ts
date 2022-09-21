@@ -1,12 +1,20 @@
-import { Wallet } from "@project-serum/anchor";
-import { Transaction, Connection } from "@solana/web3.js";
+import type { Wallet } from "@saberhq/solana-contrib";
+import { web3 } from "@project-serum/anchor";
+import { Transaction, Connection, PublicKey } from "@solana/web3.js";
+import { withInitStakePool } from "./transaction";
 
 export const createStakePool = async (
   connection: Connection,
   wallet: Wallet,
-  params: {
+  params: {}
+): Promise<[Transaction, PublicKey]> => {
+  const transaction = new Transaction();
 
-  }
-): Promise<[Transaction, PublicKey, PublicKey]> => {
-    const transaction = new Transaction();
+  const [, stakePoolId] = await withInitStakePool(
+    transaction,
+    connection,
+    wallet
+  );
+
+  return [transaction, stakePoolId];
 };
