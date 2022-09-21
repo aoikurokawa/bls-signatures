@@ -18,5 +18,3 @@ url = "https://anchor.projectserum.com"
 
 [test]
 startup_wait = 10000
-
-
