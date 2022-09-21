@@ -19,7 +19,7 @@ export class PollCountWrapper {
   }
 
   async fetchVote(key: PublicKey): Promise<VoteData> {
-    return await this.program.account.voteData.fetch(key);
+    return await this.program.account.vote.fetch(key);
   }
 
   async createPollCount({
