@@ -1,27 +1,22 @@
 import { TransactionEnvelope } from "@saberhq/solana-contrib";
 import { PublicKey, Keypair, SystemProgram } from "@solana/web3.js";
 
-import { VoteData, VotingProgram } from "../../programs";
+import { VoteData } from "../../programs";
 import { MyKheSDK } from "../../sdk";
 import { findPollCountAddress } from "../../programs/voting/pda";
-import { PendingGovernor } from "../../programs/voting/types";
 // import { VotingWrapper } from "./voting";
 
 export class PollCountWrapper {
-  readonly program: VotingProgram;
-
+  // readonly program: VotingProgram;
   // constructor(readonly sdk: MyKheSDK) {
   //   this.program = sdk.program.Voting;
   // }
-
   // get provider() {
   //   return this.sdk.provider;
   // }
-
   // async fetchVote(key: PublicKey): Promise<VoteData> {
   //   return await this.program.account.vote.fetch(key);
   // }
-
   // async createPollCount({
   //   baseKP = Keypair.generate(),
   // }: {
@@ -29,7 +24,6 @@ export class PollCountWrapper {
   // }): Promise<PendingGovernor> {
   //   const [countData, bump] = await findPollCountAddress();
   //   const wrapper = new VotingWrapper(this.sdk, countData);
-
   //   await wrapper.program.methods
   //     .initialize(bump)
   //     .accounts({
@@ -38,7 +32,6 @@ export class PollCountWrapper {
   //       systemProgram: SystemProgram.programId,
   //     })
   //     .rpc();
-
   //   return {
   //     wrapper,
   //     tx: new TransactionEnvelope(
