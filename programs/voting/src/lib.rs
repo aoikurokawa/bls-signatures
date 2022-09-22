@@ -57,6 +57,7 @@ pub mod voting {
 
     /// Activates a poll
     pub fn activate_poll(ctx: Context<ActivatePoll>) -> Result<()> {
+        // have to add validation
         let poll = &mut ctx.accounts.poll;
         let now = Clock::get()?.unix_timestamp;
         poll.activated_at = now;
