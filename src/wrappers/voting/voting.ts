@@ -9,8 +9,8 @@ import { u64 } from "@saberhq/token-utils";
 
 import { PollCountData, PollData, VoteData } from "../../programs/voting";
 import { MyKheSDK } from "../../sdk";
-import { findPollCountAddress, findPollAddress, findVoteAddress } from "./pda";
-import { Poll, Vote } from "./types";
+import { findPollCountAddress, findPollAddress, findVoteAddress } from "../../programs/voting/pda";
+import { Poll, Vote } from "../../programs/voting/types";
 
 export class VotingWrapper {
   private _pollCount: PollCountData | null = null;

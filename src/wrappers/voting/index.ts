@@ -1,2 +1,2 @@
-export * from "./pda";
+export * from "../../programs/voting/pda";
 export * from "./voting";
