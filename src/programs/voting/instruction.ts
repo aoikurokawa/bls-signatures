@@ -2,14 +2,11 @@ import { AnchorProvider, Program } from "@project-serum/anchor";
 import { Wallet } from "@saberhq/solana-contrib";
 import {
   Connection,
-  Keypair,
   SystemProgram,
   TransactionInstruction,
   PublicKey,
 } from "@solana/web3.js";
 import { VOTING_ADDRESS, VOTING_IDL, VOTING_PROGRAM } from "./constants";
-
-import { findPollCountAddress } from "./pda";
 
 export const initPollCount = (
   connection: Connection,
