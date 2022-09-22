@@ -6,11 +6,8 @@ import {
   TransactionInstruction,
   PublicKey,
 } from "@solana/web3.js";
-import { u64 } from "@saberhq/token-utils";
 
 import { VOTING_ADDRESS, VOTING_IDL, VOTING_PROGRAM } from "./constants";
-import { findPollAddress } from "./pda";
-import { fetchPoleCount } from "./accounts";
 
 export const initPollCount = (
   connection: Connection,
@@ -40,9 +37,9 @@ export const createProposal = (
   connection: Connection,
   wallet: Wallet,
   params: {
-    countDataId: PublicKey;
-    pollDataId: PublicKey;
-    pollDataBump: number;
+    pollCountPda: PublicKey;
+    pollPda: PublicKey;
+    pollBump: number;
   }
 ): TransactionInstruction => {
   const provider = new AnchorProvider(connection, wallet, {});
@@ -52,10 +49,10 @@ export const createProposal = (
     provider
   );
 
-  return votingProgram.instruction.createPoll(params.pollDataBump, {
+  return votingProgram.instruction.createPoll(params.pollBump, {
     accounts: {
-      countData: params.countDataId,
-      poll: params.pollDataId,
+      countData: params.pollCountPda,
+      poll: params.pollPda,
       payer: wallet.publicKey,
       systemProgram: SystemProgram.programId,
     },

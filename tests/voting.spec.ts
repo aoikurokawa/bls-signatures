@@ -59,7 +59,7 @@ describe("Voting", () => {
     let pollIndex: anchor.BN;
     let pollDataPda: PublicKey;
 
-    before("create a dummy poll", async () => {
+    before("Create a dummy poll", async () => {
       const provider = getProvider();
       const transaction = new anchor.web3.Transaction();
 
