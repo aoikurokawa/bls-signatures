@@ -30,12 +30,6 @@ describe("Voting", () => {
       provider.wallet
     );
 
-    // await expectTXTable(
-    //   new TransactionEnvelope(SolanaProvider.init(provider), [
-    //     ...transaction.instructions,
-    //   ]),
-    //   "Create Pole Count"
-    // ).to.be.fulfilled;
     await provider.sendAndConfirm(transaction);
   });
 
@@ -68,18 +62,6 @@ describe("Voting", () => {
         provider.connection,
         provider.wallet
       );
-      //   await votingW.program.methods
-      //     .createPoll(bump, "Dummy poll", "https://www.dummy.com/hello")
-      //     .accounts({
-      //       countData: countDataPda,
-      //       poll: poll,
-      //       payer: votingW.provider.wallet.publicKey,
-      //       systemProgram: anchor.web3.SystemProgram.programId,
-      //     })
-      //     .rpc();
-
-      //   pollIndex = index;
-      //   pollKey = poll;
       await provider.sendAndConfirm(transaction);
     });
 
