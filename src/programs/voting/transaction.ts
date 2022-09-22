@@ -11,7 +11,10 @@ export const withInitPoolCount = async (
   const [countDataPda, countDataBump] = await findPollCountAddress();
 
   transaction.add(
-    initPollCount(connection, wallet, { countDataId: countDataPda })
+    initPollCount(connection, wallet, {
+      countDataId: countDataPda,
+      bump: countDataBump,
+    })
   );
 
   return [transaction, countDataPda];

@@ -1043,20 +1043,6 @@ __metadata:
   languageName: node
   linkType: hard
 
-"chai@npm:4.3.0":
-  version: 4.3.0
-  resolution: "chai@npm:4.3.0"
-  dependencies:
-    assertion-error: ^1.1.0
-    check-error: ^1.0.2
-    deep-eql: ^3.0.1
-    get-func-name: ^2.0.0
-    pathval: ^1.1.0
-    type-detect: ^4.0.5
-  checksum: 9bf70e086c7a1a0660235011d438049d99be5447ea8cc97f395b98b9d502006b94097f4a1d68ba79eb42243bca3c77709e80c1a4002a1b5a6882c61d881238e3
-  languageName: node
-  linkType: hard
-
 "chai@npm:=4.3.4":
   version: 4.3.4
   resolution: "chai@npm:4.3.4"
@@ -2482,8 +2468,7 @@ __metadata:
     "@types/mocha": ^9.0.0
     "@typescript-eslint/eslint-plugin": latest
     "@typescript-eslint/parser": latest
-    chai: 4.3.0
-    chai-as-promised: ^7.1.1
+    chai: =4.3.4
     eslint: ^8.23.0
     jsbi: ^4.3.0
     l: ^0.6.0
@@ -2494,10 +2479,11 @@ __metadata:
     ts-node: ^10.9.1
     typescript: ^4.3.5
   peerDependencies:
-    "@project-serum/anchor": ">=0.24"
-    "@saberhq/anchor-contrib": ^1.13
-    "@saberhq/solana-contrib": ^1.13
-    "@saberhq/token-utils": ^1.13
+    "@project-serum/anchor": ">=0.19"
+    "@saberhq/anchor-contrib": ^1.11
+    "@saberhq/solana-contrib": ^1.11
+    "@saberhq/token-utils": ^1.11
+    "@solana/web3.js": ^1
     jsbi: ^3 || ^4
   languageName: unknown
   linkType: soft
@@ -2704,7 +2690,7 @@ __metadata:
   languageName: node
   linkType: hard
 
-"pathval@npm:^1.1.0, pathval@npm:^1.1.1":
+"pathval@npm:^1.1.1":
   version: 1.1.1
   resolution: "pathval@npm:1.1.1"
   checksum: 090e3147716647fb7fb5b4b8c8e5b55e5d0a6086d085b6cd23f3d3c01fcf0ff56fd3cc22f2f4a033bd2e46ed55d61ed8379e123b42afe7d531a2a5fc8bb556d6

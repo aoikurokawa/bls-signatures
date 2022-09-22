@@ -1,11 +1,12 @@
 {
   "compilerOptions": {
-    "types": ["mocha", "chai"],
+    "types": ["mocha"],
     "typeRoots": ["./node_modules/@types"],
     "lib": ["es2015"],
-    "module": "commonjs",
+    "module": "commonJS",
     "target": "es6",
     "esModuleInterop": true,
-    "resolveJsonModule": true,
-  }
+    "resolveJsonModule": true
+  },
+  "include": ["src/", "tests/"]
 }

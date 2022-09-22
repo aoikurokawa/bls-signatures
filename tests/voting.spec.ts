@@ -3,7 +3,7 @@ import { PublicKey, Transaction } from "@solana/web3.js";
 import { expect } from "chai";
 import invariant from "tiny-invariant";
 
-import { getProvider, makeSDK, ONE, setupPollCount, ZERO } from "./workspace";
+import { getProvider, ONE, ZERO } from "./workspace";
 import { findPollAddress, findPollCountAddress } from "../src";
 import { withInitPoolCount } from "../src/programs/voting/transaction";
 import { expectTXTable } from "@saberhq/chai-solana";
@@ -11,13 +11,9 @@ import { SolanaProvider, TransactionEnvelope } from "@saberhq/solana-contrib";
 import { fetchPoleCount } from "../src/programs/voting/accounts";
 
 describe("Voting", () => {
-  // const sdk = makeSDK();
-
-  // let votingW: VotingWrapper;
   let countDataPda: PublicKey;
 
   before(async () => {
-    // const { votingWrapper } = await setupPollCount({ sdk });
     const provider = getProvider();
     const transaction = new anchor.web3.Transaction();
 
@@ -33,8 +29,6 @@ describe("Voting", () => {
       ]),
       "Create Pole Count"
     ).to.be.fulfilled;
-
-    // votingW = votingWrapper;
   });
 
   it("PollCounter (Governor) was initialized", async () => {

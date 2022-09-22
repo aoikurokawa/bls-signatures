@@ -13,6 +13,7 @@ export const initPollCount = (
   wallet: Wallet,
   params: {
     countDataId: PublicKey;
+    bump: number;
   }
 ): TransactionInstruction => {
   const provider = new AnchorProvider(connection, wallet, {});
@@ -22,7 +23,9 @@ export const initPollCount = (
     provider
   );
 
-  return votingProgram.instruction.initialize({
+  console.log("Count data id", params.countDataId);
+
+  return votingProgram.instruction.initialize(params.bump, {
     accounts: {
       countData: params.countDataId,
       payer: wallet.publicKey,
