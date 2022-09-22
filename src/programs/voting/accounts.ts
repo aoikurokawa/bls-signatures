@@ -1,8 +1,13 @@
 import { AnchorProvider, Program } from "@project-serum/anchor";
 import { SignerWallet } from "@saberhq/solana-contrib";
-import { Connection, Keypair } from "@solana/web3.js";
+import { Connection, Keypair, PublicKey } from "@solana/web3.js";
 
-import { VOTING_ADDRESS, VOTING_IDL, VOTING_PROGRAM } from "./constants";
+import {
+  VoteData,
+  VOTING_ADDRESS,
+  VOTING_IDL,
+  VOTING_PROGRAM,
+} from "./constants";
 
 const getProgram = (connection: Connection) => {
   const provider = new AnchorProvider(
@@ -13,4 +18,11 @@ const getProgram = (connection: Connection) => {
   return new Program<VOTING_PROGRAM>(VOTING_IDL, VOTING_ADDRESS, provider);
 };
 
-export const fetchVote = async () => {};
+export const fetchVote = async (
+  connection: Connection,
+  key: PublicKey
+): Promise<VoteData> => {
+  const votingProgram = getProgram(connection);
+
+  return await votingProgram.account.vote.fetch(key);
+};
