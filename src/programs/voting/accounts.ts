@@ -3,6 +3,7 @@ import { SignerWallet } from "@saberhq/solana-contrib";
 import { Connection, Keypair, PublicKey } from "@solana/web3.js";
 
 import {
+  PollCountData,
   VoteData,
   VOTING_ADDRESS,
   VOTING_IDL,
@@ -16,6 +17,14 @@ const getProgram = (connection: Connection) => {
     {}
   );
   return new Program<VOTING_PROGRAM>(VOTING_IDL, VOTING_ADDRESS, provider);
+};
+
+export const fetchPoleCount = async (
+  connecition: Connection,
+  key: PublicKey
+): Promise<PollCountData> => {
+  const votingProgram = getProgram(connecition);
+  return await votingProgram.account.pollCount.fetch(key);
 };
 
 export const fetchVote = async (
