@@ -65,7 +65,7 @@ export const createProposalMeta = (
   params: {
     pollMetaBump: number;
     title: string;
-    desctiption: string;
+    desctiptionLink: string;
     pollPda: PublicKey;
     pollMetaPda: PublicKey;
   }
@@ -80,7 +80,7 @@ export const createProposalMeta = (
   return votingProgram.instruction.createPollMeta(
     params.pollMetaBump,
     params.title,
-    params.desctiption,
+    params.desctiptionLink,
     {
       accounts: {
         pollMeta: params.pollMetaPda,

@@ -65,7 +65,6 @@ describe("Voting", () => {
         provider.connection,
         provider.wallet
       );
-      await provider.sendAndConfirm(transaction);
 
       // Create Proposal Metadata
       [, pollMetaDataPda] = await withCreateProposalMeta(
@@ -74,6 +73,8 @@ describe("Voting", () => {
         provider.wallet,
         { index: pollIndex }
       );
+
+      await provider.sendAndConfirm(transaction);
     });
 
     it("Poll as initialized", async () => {

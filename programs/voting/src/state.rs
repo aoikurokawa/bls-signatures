@@ -57,7 +57,7 @@ pub struct PollMeta {
 }
 
 impl PollMeta {
-    pub const LEN: usize = PUBKEY_BYTES;
+    pub const LEN: usize = 8 + PUBKEY_BYTES;
 }
 
 #[account]

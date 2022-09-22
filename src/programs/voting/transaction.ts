@@ -65,7 +65,7 @@ export const withCreateProposalMeta = async (
   transaction.add(
     createProposalMeta(connection, wallet, {
       title: "Dummy proposal",
-      desctiption: "Dummy description",
+      desctiptionLink: "https://www.my_khe_project.com/",
       pollPda,
       pollMetaPda,
       pollMetaBump,
