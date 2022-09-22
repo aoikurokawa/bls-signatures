@@ -58,7 +58,7 @@ export const withCreateProposalMeta = async (
   params: {
     index: u64;
   }
-) => {
+): Promise<[web3.Transaction, web3.PublicKey]> => {
   const [pollPda, pollBump] = await findPollAddress(params.index);
   const [pollMetaPda, pollMetaBump] = await findPollMetaAddress(pollPda);
 
@@ -71,4 +71,6 @@ export const withCreateProposalMeta = async (
       pollMetaBump,
     })
   );
+
+  return [transaction, pollMetaPda];
 };

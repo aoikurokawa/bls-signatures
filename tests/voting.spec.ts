@@ -13,6 +13,7 @@ import { getProvider, ONE, ZERO } from "./workspace";
 import { findPollAddress, findPollCountAddress } from "../src";
 import {
   withCreateProposal,
+  withCreateProposalMeta,
   withInitPoolCount,
 } from "../src/programs/voting/transaction";
 import { fetchPoleCount, fetchPoll } from "../src/programs/voting/accounts";
@@ -52,8 +53,10 @@ describe("Voting", () => {
   describe("Proposal", () => {
     let pollIndex: anchor.BN;
     let pollDataPda: PublicKey;
+    let pollMetaDataPda: PublicKey;
 
-    before("Create a dummy poll", async () => {
+    before("Create a dummy poll and metadata", async () => {
+      // Create Proposal
       const provider = getProvider();
       const transaction = new anchor.web3.Transaction();
 
@@ -63,6 +66,14 @@ describe("Voting", () => {
         provider.wallet
       );
       await provider.sendAndConfirm(transaction);
+
+      // Create Proposal Metadata
+      [, pollMetaDataPda] = await withCreateProposalMeta(
+        transaction,
+        provider.connection,
+        provider.wallet,
+        { index: pollIndex }
+      );
     });
 
     it("Poll as initialized", async () => {
