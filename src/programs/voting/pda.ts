@@ -32,6 +32,23 @@ export const findPollAddress = async (
 };
 
 /**
+ * Finds the PDA of a Proposal PDA
+ * @param pollPda
+ * @returns
+ */
+export const findPollMetaAddress = async (
+  pollPda: PublicKey
+): Promise<[PublicKey, number]> => {
+  return await PublicKey.findProgramAddress(
+    [
+      anchor.utils.bytes.utf8.encode("my_khe_proposal_meta"),
+      pollPda.toBuffer(),
+    ],
+    VOTING_ADDRESS
+  );
+};
+
+/**
  * Finds the PDA of a Vote
  * @param proposalKey
  * @param voterKey

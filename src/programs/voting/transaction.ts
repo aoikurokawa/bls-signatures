@@ -2,8 +2,16 @@ import { web3 } from "@project-serum/anchor";
 import { Wallet } from "@saberhq/solana-contrib";
 import { u64 } from "@saberhq/token-utils";
 import { fetchPoleCount } from "./accounts";
-import { createProposal, initPollCount } from "./instruction";
-import { findPollAddress, findPollCountAddress } from "./pda";
+import {
+  createProposal,
+  createProposalMeta,
+  initPollCount,
+} from "./instruction";
+import {
+  findPollAddress,
+  findPollCountAddress,
+  findPollMetaAddress,
+} from "./pda";
 
 export const withInitPoolCount = async (
   transaction: web3.Transaction,
@@ -41,4 +49,26 @@ export const withCreateProposal = async (
   );
 
   return [transaction, poll, index];
+};
+
+export const withCreateProposalMeta = async (
+  transaction: web3.Transaction,
+  connection: web3.Connection,
+  wallet: Wallet,
+  params: {
+    index: u64;
+  }
+) => {
+  const [pollPda, pollBump] = await findPollAddress(params.index);
+  const [pollMetaPda, pollMetaBump] = await findPollMetaAddress(pollPda);
+
+  transaction.add(
+    createProposalMeta(connection, wallet, {
+      title: "Dummy proposal",
+      desctiption: "Dummy description",
+      pollPda,
+      pollMetaPda,
+      pollMetaBump,
+    })
+  );
 };
