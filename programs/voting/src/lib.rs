@@ -2,6 +2,7 @@ use anchor_lang::prelude::*;
 use num_traits::cast::ToPrimitive;
 
 mod account_structs;
+mod account_validators;
 mod errors;
 mod events;
 mod state;

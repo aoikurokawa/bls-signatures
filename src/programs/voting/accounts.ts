@@ -5,6 +5,7 @@ import { Connection, Keypair, PublicKey } from "@solana/web3.js";
 import {
   PollCountData,
   PollData,
+  PollMetaData,
   VoteData,
   VOTING_ADDRESS,
   VOTING_IDL,
@@ -35,6 +36,14 @@ export const fetchPoll = async (
 ): Promise<PollData> => {
   const votingProgram = getProgram(connection);
   return await votingProgram.account.poll.fetch(key);
+};
+
+export const fetchPollMeta = async (
+  connection: Connection,
+  key: PublicKey
+): Promise<PollMetaData> => {
+  const votingProgram = getProgram(connection);
+  return await votingProgram.account.pollMeta.fetch(key);
 };
 
 export const fetchVote = async (

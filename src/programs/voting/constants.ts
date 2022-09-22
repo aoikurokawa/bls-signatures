@@ -16,4 +16,5 @@ export type VotingTypes = AnchorTypes<VOTING_PROGRAM>;
 type Accounts = VotingTypes["Accounts"];
 export type PollCountData = Accounts["pollCount"];
 export type PollData = Accounts["poll"];
+export type PollMetaData = Accounts["pollMeta"];
 export type VoteData = Accounts["vote"];
