@@ -16,7 +16,11 @@ import {
   withCreateProposalMeta,
   withInitPoolCount,
 } from "../src/programs/voting/transaction";
-import { fetchPoleCount, fetchPoll } from "../src/programs/voting/accounts";
+import {
+  fetchPoleCount,
+  fetchPoll,
+  fetchPollMeta,
+} from "../src/programs/voting/accounts";
 
 describe("Voting", () => {
   let countDataPda: PublicKey;
@@ -77,7 +81,7 @@ describe("Voting", () => {
       await provider.sendAndConfirm(transaction);
     });
 
-    it("Poll as initialized", async () => {
+    it("Dummy poll created", async () => {
       const provider = getProvider();
       const [expectedPollKey, bump] = await findPollAddress(pollIndex);
       expect(pollDataPda.toString()).to.equal(expectedPollKey.toString());
@@ -87,6 +91,19 @@ describe("Voting", () => {
       expect(pollData.index.toString()).to.equal(pollIndex.toString());
       expect(pollData.proposer.toString()).to.equal(
         provider.wallet.publicKey.toString()
+      );
+    });
+
+    it("Dummy pollMeta as created", async () => {
+      const provider = getProvider();
+
+      const pollMetaData = await fetchPollMeta(
+        provider.connection,
+        pollMetaDataPda
+      );
+      expect(pollMetaData.title).to.equal("Dummy proposal");
+      expect(pollMetaData.descriptionLink).to.equal(
+        "https://www.my_khe_project.com/"
       );
     });
 
