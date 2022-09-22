@@ -36,7 +36,7 @@ export const initPollCount = (
   });
 };
 
-export const createProposal = async (
+export const createProposal = (
   connection: Connection,
   wallet: Wallet,
   params: {
@@ -44,7 +44,7 @@ export const createProposal = async (
     pollDataId: PublicKey;
     pollDataBump: number;
   }
-): Promise<TransactionInstruction> => {
+): TransactionInstruction => {
   const provider = new AnchorProvider(connection, wallet, {});
   const votingProgram = new Program<VOTING_PROGRAM>(
     VOTING_IDL,

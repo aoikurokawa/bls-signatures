@@ -32,7 +32,7 @@ export const withCreateProposal = async (
   const index = new u64(pollCountData.proposalCount);
   const [poll, bump] = await findPollAddress(index);
   transaction.add(
-    await createProposal(connection, wallet, {
+    createProposal(connection, wallet, {
       countDataId: countDataPda,
       pollDataBump: bump,
       pollDataId: poll,
