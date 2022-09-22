@@ -58,3 +58,37 @@ export const createProposal = (
     },
   });
 };
+
+export const createProposalMeta = (
+  connection: Connection,
+  wallet: Wallet,
+  params: {
+    bump: number;
+    title: string;
+    desctiption: string;
+    pollPda: PublicKey;
+    pollMetaPda: PublicKey;
+  }
+) => {
+  const provider = new AnchorProvider(connection, wallet, {});
+  const votingProgram = new Program<VOTING_PROGRAM>(
+    VOTING_IDL,
+    VOTING_ADDRESS,
+    provider
+  );
+
+  return votingProgram.instruction.createPollMeta(
+    params.bump,
+    params.title,
+    params.desctiption,
+    {
+      accounts: {
+        pollMeta: params.pollMetaPda,
+        poll: params.pollPda,
+        payer: wallet.publicKey,
+        proposer: wallet.publicKey,
+        systemProgram: SystemProgram.programId,
+      },
+    }
+  );
+};
