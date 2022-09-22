@@ -42,7 +42,7 @@ pub struct Poll {
 }
 
 impl Poll {
-    pub const LEN: usize = 8 + 8 + 1 + PUBKEY_BYTES + 8 + 8;
+    pub const LEN: usize = 8 + 8 + 1 + PUBKEY_BYTES + 8 + 8 + 8 + 8 + 8 + 8;
 }
 
 #[account]
