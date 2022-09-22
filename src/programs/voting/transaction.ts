@@ -26,11 +26,12 @@ export const withCreateProposal = async (
   transaction: web3.Transaction,
   connection: web3.Connection,
   wallet: Wallet
-): Promise<[web3.Transaction, web3.PublicKey]> => {
+): Promise<[web3.Transaction, web3.PublicKey, u64]> => {
   const [countDataPda, countDataBump] = await findPollCountAddress();
   const pollCountData = await fetchPoleCount(connection, countDataPda);
   const index = new u64(pollCountData.proposalCount);
   const [poll, bump] = await findPollAddress(index);
+
   transaction.add(
     createProposal(connection, wallet, {
       countDataId: countDataPda,
@@ -39,5 +40,5 @@ export const withCreateProposal = async (
     })
   );
 
-  return [transaction, poll];
+  return [transaction, poll, index];
 };
