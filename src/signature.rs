@@ -493,4 +493,17 @@ mod tests {
             &[zero_key.public_key()][..]
         ));
     }
+
+    #[test]
+    fn test_bytes_roundtrip() {
+        let mut rng = ChaCha8Rng::seed_from_u64(12);
+        let sk = PrivateKey::generate(&mut rng);
+
+        let msg = (0..64).map(|_| rng.gen()).collect::<Vec<u8>>();
+        let signature = sk.sign(&msg);
+
+        let signature_bytes = signature.as_bytes();
+        assert_eq!(signature_bytes.len(), 96);
+        assert_eq!(Signature::from_bytes(&signature_bytes).unwrap(), signature);
+    }
 }
