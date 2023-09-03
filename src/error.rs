@@ -17,4 +17,3 @@ pub enum Error {
     #[error("Zero sized input")]
     ZeroSizedInput,
 }
-

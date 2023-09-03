@@ -328,12 +328,17 @@ pub fn verify_messages(
 
 #[cfg(test)]
 mod tests {
-    use bls12_381::Scalar;
+    use base64::STANDARD;
+    use base64_serde::base64_serde_type;
     use rand::Rng;
     use rand_chacha::ChaCha8Rng;
     use rand_core::SeedableRng;
+    use serde::Deserialize;
 
-    use crate::key::PrivateKey;
+    #[cfg(feature = "pairing")]
+    use bls12_381::{G1Projective, Scalar};
+
+    use crate::key::{PrivateKey, G1_COMPRESSED_SIZE};
 
     use super::*;
 
@@ -505,5 +510,98 @@ mod tests {
         let signature_bytes = signature.as_bytes();
         assert_eq!(signature_bytes.len(), 96);
         assert_eq!(Signature::from_bytes(&signature_bytes).unwrap(), signature);
+    }
+
+    base64_serde_type!(Base64Standard, STANDARD);
+
+    #[derive(Debug, Clone, Deserialize)]
+    struct Case {
+        #[serde(rename = "Msg")]
+        msg: String,
+        #[serde(rename = "Ciphersuite")]
+        ciphersuite: String,
+        #[serde(rename = "G1Compressed", with = "Base64Standard")]
+        g1_compressed: Vec<u8>,
+        #[serde(rename = "G2Compressed", with = "Base64Standard")]
+        g2_compressed: Vec<u8>,
+        #[serde(rename = "BLSPrivKey")]
+        priv_key: Option<String>,
+        #[serde(rename = "BLSPubKey")]
+        pub_key: Option<String>,
+        #[serde(rename = "BLSSigG2")]
+        signature: Option<String>,
+    }
+
+    #[derive(Debug, Clone, Deserialize)]
+    struct Cases {
+        cases: Vec<Case>,
+    }
+
+    fn g1_from_slice(raw: &[u8]) -> Result<G1Affine, Error> {
+        if raw.len() != G1_COMPRESSED_SIZE {
+            return Err(Error::SizeMismatch);
+        }
+
+        let mut res = [0u8; G1_COMPRESSED_SIZE];
+        res.as_mut().copy_from_slice(raw);
+
+        Option::from(G1Affine::from_compressed(&res)).ok_or(Error::GroupDecode)
+    }
+
+    #[cfg(feature = "pairing")]
+    fn hash_to_g1(msg: &[u8], suite: &[u8]) -> G1Projective {
+        <G1Projective as HashToCurve<ExpandMsgXmd<sha2::Sha256>>>::hash_to_curve(msg, suite)
+    }
+
+    #[cfg(feature = "blst")]
+    fn hash_to_g1(msg: &[u8], suite: &[u8]) -> G1Projective {
+        G1Projective::hash_to_curve(msg, suite, &[])
+    }
+
+    #[cfg(feature = "pairing")]
+    fn hash_to_g2(msg: &[u8], suite: &[u8]) -> G2Projective {
+        <G2Projective as HashToCurve<ExpandMsgXmd<sha2::Sha256>>>::hash_to_curve(msg, suite)
+    }
+
+    #[cfg(feature = "blst")]
+    fn hash_to_g2(msg: &[u8], suite: &[u8]) -> G1Projective {
+        G2Projective::hash_to_curve(msg, suite, &[])
+    }
+
+    #[test]
+    fn test_vectors() {
+        let cases: Cases =
+            serde_json::from_slice(&std::fs::read("./tests/data.json").unwrap()).unwrap();
+
+        for case in cases.cases {
+            let g1: G1Projective = g1_from_slice(&case.g1_compressed).unwrap().into();
+
+            assert_eq!(
+                g1,
+                hash_to_g1(case.msg.as_bytes(), case.ciphersuite.as_bytes())
+            );
+
+            let g2: G2Projective = g2_from_slice(&case.g2_compressed).unwrap().into();
+            assert_eq!(
+                g2,
+                hash_to_g2(case.msg.as_bytes(), case.ciphersuite.as_bytes())
+            );
+
+            if case.ciphersuite.as_bytes() == CSUITE {
+                let pub_key =
+                    PublicKey::from_bytes(&base64::decode(case.pub_key.as_ref().unwrap()).unwrap())
+                        .unwrap();
+                let priv_key = PrivateKey::from_string(case.priv_key.as_ref().unwrap()).unwrap();
+                let signature = Signature::from_bytes(
+                    &base64::decode(case.signature.as_ref().unwrap()).unwrap(),
+                )
+                .unwrap();
+
+                let sig2 = priv_key.sign(&case.msg);
+                assert_eq!(signature, sig2, "signatures do not match");
+
+                assert!(pub_key.verify(signature, &case.msg), "failed to verify");
+            }
+        }
     }
 }
