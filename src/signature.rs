@@ -328,6 +328,7 @@ pub fn verify_messages(
 
 #[cfg(test)]
 mod tests {
+    use bls12_381::Scalar;
     use rand::Rng;
     use rand_chacha::ChaCha8Rng;
     use rand_core::SeedableRng;
@@ -422,5 +423,74 @@ mod tests {
             &messages[..],
             &public_keys
         ))
+    }
+
+    #[test]
+    fn test_zero_key() {
+        let mut rng = ChaCha8Rng::seed_from_u64(12);
+
+        // In the current iteration we expect the zero key to be valid and work
+        let zero_key: PrivateKey = Scalar::zero().into();
+        assert!(bool::from(zero_key.public_key().0.is_identity()));
+
+        println!(
+            "{:?}\n{:?}",
+            zero_key.public_key().as_bytes(),
+            zero_key.as_bytes()
+        );
+        let num_messages = 10;
+
+        // generate private keys
+        let mut private_keys: Vec<_> = (0..num_messages - 1)
+            .map(|_| PrivateKey::generate(&mut rng))
+            .collect();
+
+        private_keys.push(zero_key);
+
+        // generate messages
+        let messages: Vec<Vec<u8>> = (0..num_messages)
+            .map(|_| (0..64).map(|_| rng.gen()).collect())
+            .collect();
+
+        // sign messages
+        let sigs = messages
+            .iter()
+            .zip(&private_keys)
+            .map(|(message, pk)| pk.sign(message))
+            .collect::<Vec<Signature>>();
+
+        let aggreated_signature = aggregate(&sigs).expect("failed to aggregate");
+
+        let hashes = messages
+            .iter()
+            .map(|message| hash(message))
+            .collect::<Vec<_>>();
+        let public_keys = private_keys
+            .iter()
+            .map(|pk| pk.public_key())
+            .collect::<Vec<_>>();
+
+        assert!(
+            !verify(&aggreated_signature, &hashes, &public_keys),
+            "verified with zero key"
+        );
+
+        let messages = messages.iter().map(|r| &r[..]).collect::<Vec<_>>();
+        assert!(
+            !verify_messages(&aggreated_signature, &messages, &public_keys),
+            "verified with zero key"
+        );
+
+        // single message is rejected
+        let signature = zero_key.sign(&messages[0]);
+
+        assert!(!zero_key.public_key().verify(signature, &messages[0]));
+
+        let aggregated_signature = aggregate(&[signature][..]).expect("failed to aggregate");
+        assert!(!verify_messages(
+            &aggregated_signature,
+            &messages,
+            &[zero_key.public_key()][..]
+        ));
     }
 }
