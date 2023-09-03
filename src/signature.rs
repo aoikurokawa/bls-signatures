@@ -325,3 +325,102 @@ pub fn verify_messages(
 
     valid && pairing.finalverify(Some(&gtsig))
 }
+
+#[cfg(test)]
+mod tests {
+    use rand::Rng;
+    use rand_chacha::ChaCha8Rng;
+    use rand_core::SeedableRng;
+
+    use crate::key::PrivateKey;
+
+    use super::*;
+
+    #[test]
+    fn basic_aggregation() {
+        let mut rng = ChaCha8Rng::seed_from_u64(12);
+
+        let num_messages = 10;
+
+        // generate private keys
+        let private_keys: Vec<_> = (0..num_messages)
+            .map(|_| PrivateKey::generate(&mut rng))
+            .collect();
+
+        // generate messages
+        let messages: Vec<Vec<u8>> = (0..num_messages)
+            .map(|_| (0..64).map(|_| rng.gen()).collect())
+            .collect();
+
+        // sign messages
+        let sigs = messages
+            .iter()
+            .zip(&private_keys)
+            .map(|(message, pk)| pk.sign(message))
+            .collect::<Vec<Signature>>();
+
+        let aggregated_signature = aggregate(&sigs).expect("failed to aggregate");
+
+        let hashes = messages
+            .iter()
+            .map(|message| hash(message))
+            .collect::<Vec<_>>();
+        let public_keys = private_keys
+            .iter()
+            .map(|pk| pk.public_key())
+            .collect::<Vec<_>>();
+
+        assert!(
+            verify(&aggregated_signature, &hashes, &public_keys),
+            "failed to verify"
+        );
+
+        let messages = messages.iter().map(|r| &r[..]).collect::<Vec<_>>();
+        assert!(verify_messages(
+            &aggregated_signature,
+            &messages[..],
+            &public_keys
+        ));
+    }
+
+    #[test]
+    fn aggregation_same_message() {
+        let mut rng = ChaCha8Rng::seed_from_u64(12);
+
+        let num_messages = 10;
+
+        // generate private keys
+        let private_keys: Vec<_> = (0..num_messages)
+            .map(|_| PrivateKey::generate(&mut rng))
+            .collect();
+
+        // generate messages
+        let message: Vec<u8> = (0..64).map(|_| rng.gen()).collect();
+
+        // sign messages
+        let sigs = private_keys
+            .iter()
+            .map(|pk| pk.sign(&message))
+            .collect::<Vec<Signature>>();
+
+        let aggregated_signature = aggregate(&sigs).expect("failed to aggregate");
+
+        // check that equal messages can not be aggregated
+        let hashes: Vec<_> = (0..num_messages).map(|_| hash(&message)).collect();
+        let public_keys = private_keys
+            .iter()
+            .map(|pk| pk.public_key())
+            .collect::<Vec<_>>();
+        assert!(
+            !verify(&aggregated_signature, &hashes, &public_keys),
+            "must not verify aggregate with the same messages"
+        );
+        let messages = vec![&message[..]; num_messages];
+
+        assert!(!verify_messages(
+            &aggregated_signature,
+            &messages[..],
+            &public_keys
+        ))
+    }
+}
