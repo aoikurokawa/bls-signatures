@@ -9,18 +9,17 @@ use bls12_381::{hash_to_curve::HashToField, G1Affine, G1Projective, Scalar};
 #[cfg(feature = "pairing")]
 use hkdf::Hkdf;
 #[cfg(feature = "pairing")]
-use sha2::{
-    digest::{consts::U48, generic_array::GenericArray},
-    Sha256,
-};
+use sha2::{digest::generic_array::typenum::U48, digest::generic_array::GenericArray, Sha256};
 
 #[cfg(feature = "blst")]
-use blstrs::G2Affine;
+use blstrs::{G1Affine, G1Projective, G2Affine, Scalar};
+#[cfg(feature = "blst")]
+use group::prime::PrimeCurveAffine;
 
 pub(crate) struct ScalarRepr(<Scalar as PrimeFieldBits>::ReprBits);
 
-use crate::signature::{hash, verify_messages};
-use crate::{error::Error, signature::Signature};
+use crate::error::Error;
+use crate::signature::*;
 
 pub(crate) const G1_COMPRESSED_SIZE: usize = 48;
 
@@ -91,6 +90,7 @@ impl PrivateKey {
     /// Generate a new private key.
     pub fn generate<R: RngCore + CryptoRng>(rng: &mut R) -> Self {
         // IKM must be at least 32 bytes long:
+        // https://tools.ietf.org/html/draft-irtf-cfrg-bls-signature-00#section-2.3
         let mut ikm = [0u8; 32];
         rng.try_fill_bytes(&mut ikm)
             .expect("unable to produce secure randomness");
@@ -150,7 +150,7 @@ impl PrivateKey {
         PublicKey(pk.into())
     }
 
-    /// Deserialzes a private key from the field element as a decimal number.
+    /// Deserializes a private key from the field element as a decimal number.
     pub fn from_string<T: AsRef<str>>(s: T) -> Result<Self, Error> {
         match Scalar::from_str_vartime(s.as_ref()) {
             Some(f) => Ok(f.into()),
@@ -164,6 +164,7 @@ impl Serialize for PrivateKey {
         for digit in &self.0.to_le_bits().data {
             dest.write_all(&digit.to_le_bytes())?;
         }
+
         Ok(())
     }
 
@@ -175,6 +176,8 @@ impl Serialize for PrivateKey {
 
         let mut res = [0u8; FR_SIZE];
         res.copy_from_slice(&raw[..FR_SIZE]);
+
+        // TODO: once zero keys are rejected, insert check for zero.
 
         Scalar::from_repr_vartime(res)
             .map(Into::into)
@@ -234,7 +237,7 @@ fn key_gen<T: AsRef<[u8]>>(data: T) -> Scalar {
     // HKDF-Expand
     // `result` has enough length to hold the output from HKDF expansion
     let mut result = GenericArray::<u8, U48>::default();
-    assert!(prk.expand(&[0; 48], &mut result).is_ok());
+    assert!(prk.expand(&[0, 48], &mut result).is_ok());
 
     Scalar::from_okm(&result)
 }
@@ -263,3 +266,99 @@ fn key_gen<T: AsRef<[u8]>>(data: T) -> Scalar {
     out.try_into().expect("invalid key generated")
 }
 
+#[cfg(test)]
+mod tests {
+    use super::*;
+
+    use rand::SeedableRng;
+    use rand_chacha::ChaCha8Rng;
+
+    #[test]
+    fn test_bytes_roundtrip() {
+        let rng = &mut ChaCha8Rng::seed_from_u64(12);
+        let sk = PrivateKey::generate(rng);
+        let sk_bytes = sk.as_bytes();
+
+        assert_eq!(sk_bytes.len(), 32);
+        assert_eq!(PrivateKey::from_bytes(&sk_bytes).unwrap(), sk);
+
+        let pk = sk.public_key();
+        let pk_bytes = pk.as_bytes();
+
+        assert_eq!(pk_bytes.len(), 48);
+        assert_eq!(PublicKey::from_bytes(&pk_bytes).unwrap(), pk);
+    }
+
+    #[test]
+    fn test_key_gen() {
+        let key_material = "hello world (it's a secret!) very secret stuff";
+        let fr_val = key_gen(key_material);
+        #[cfg(feature = "blst")]
+        let expect = Scalar::from_u64s_le(&[
+            0x8a223b0f9e257f7d,
+            0x2d80f7b7f5ea6cc4,
+            0xcc9e063a0ea0009c,
+            0x4a73baed5cb75109,
+        ])
+        .unwrap();
+
+        #[cfg(feature = "pairing")]
+        let expect = Scalar::from_raw([
+            0xa9f8187b89e6d49a,
+            0xf870f34063ce4b16,
+            0xc2aa3c1fff1bbaa3,
+            0x60417787ee46e23f,
+        ]);
+
+        assert_eq!(fr_val, expect);
+    }
+
+    #[test]
+    fn test_sig() {
+        let msg = "this is the message";
+        let sk = "this is the key and it is very secret";
+
+        let sk = PrivateKey::new(sk);
+        let sig = sk.sign(msg);
+        let pk = sk.public_key();
+
+        assert!(pk.verify(sig, msg));
+    }
+
+    #[test]
+    fn test_from_bytes() {
+        // Larger than the modulus
+        assert!(PrivateKey::from_bytes(&[255u8; 32]).is_err());
+
+        // Scalar field modulus' bigint (i.e. non-Montgomery form) little-endian bytes.
+        let modulus_repr: [u8; 32] = [
+            0x01, 0x00, 0x00, 0x00, 0xff, 0xff, 0xff, 0xff, 0xfe, 0x5b, 0xfe, 0xff, 0x02, 0xa4,
+            0xbd, 0x53, 0x05, 0xd8, 0xa1, 0x09, 0x08, 0xd8, 0x39, 0x33, 0x48, 0x7d, 0x9d, 0x29,
+            0x53, 0xa7, 0xed, 0x73,
+        ];
+
+        // Largest field element.
+        let neg1_repr: [u8; 32] = {
+            let mut repr = modulus_repr;
+            repr[0] -= 1;
+            repr
+        };
+        assert!(PrivateKey::from_bytes(&neg1_repr).is_ok());
+
+        // Smallest integer greater than the modulus.
+        let modulus_plus_1_repr = {
+            let mut repr = modulus_repr;
+            repr[0] += 1;
+            repr
+        };
+        assert!(PrivateKey::from_bytes(&modulus_plus_1_repr).is_err());
+
+        // simple numbers below the modulus
+        assert!(PrivateKey::from_bytes(&Scalar::from(1).to_repr()).is_ok());
+        assert!(PrivateKey::from_bytes(&Scalar::from(10).to_repr()).is_ok());
+        assert!(PrivateKey::from_bytes(&Scalar::from(100).to_repr()).is_ok());
+
+        // Larger than the modulus
+        assert!(PublicKey::from_bytes(&[255u8; 48]).is_err());
+    }
+}
