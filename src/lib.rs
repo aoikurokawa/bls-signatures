@@ -1,4 +1,6 @@
 mod error;
+mod signature;
+mod key;
 
 pub fn add(left: usize, right: usize) -> usize {
     left + right
