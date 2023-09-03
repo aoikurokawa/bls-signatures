@@ -2,6 +2,7 @@ use std::io;
 
 use ff::{PrimeField, PrimeFieldBits};
 use group::Curve;
+use rand_core::{CryptoRng, RngCore};
 
 #[cfg(feature = "pairing")]
 use bls12_381::{hash_to_curve::HashToField, G1Affine, G1Projective, Scalar};
@@ -13,8 +14,12 @@ use sha2::{
     Sha256,
 };
 
+#[cfg(feature = "blst")]
+use blstrs::G2Affine;
+
 pub(crate) struct ScalarRepr(<Scalar as PrimeFieldBits>::ReprBits);
 
+use crate::signature::{hash, verify_messages};
 use crate::{error::Error, signature::Signature};
 
 pub(crate) const G1_COMPRESSED_SIZE: usize = 48;
@@ -82,6 +87,76 @@ impl PrivateKey {
     pub fn new<T: AsRef<[u8]>>(msg: T) -> Self {
         PrivateKey(key_gen(msg))
     }
+
+    /// Generate a new private key.
+    pub fn generate<R: RngCore + CryptoRng>(rng: &mut R) -> Self {
+        // IKM must be at least 32 bytes long:
+        let mut ikm = [0u8; 32];
+        rng.try_fill_bytes(&mut ikm)
+            .expect("unable to produce secure randomness");
+
+        Self::new(ikm)
+    }
+
+    /// Sign the given message.
+    /// Calculated by `signature = hash_into_g2(message) * sk`
+    #[cfg(feature = "pairing")]
+    pub fn sign<T: AsRef<[u8]>>(&self, message: T) -> Signature {
+        let mut p = hash(message.as_ref());
+        p *= self.0;
+
+        p.into()
+    }
+
+    /// Sign the given message.
+    /// Calculated by `signature = hash_into_g2(message) * sk`
+    #[cfg(feature = "blst")]
+    pub fn sign<T: AsRef<[u8]>>(&self, message: T) -> Signature {
+        let p = hash(message.as_ref());
+        let mut sig = G2Affine::identity();
+
+        unsafe {
+            blst_lib::blst_sign_pk2_in_g1(
+                std::ptr::null_mut(),
+                sig.as_mut(),
+                p.as_ref(),
+                &self.0.into(),
+            );
+        }
+
+        sig.into()
+    }
+
+    /// Get the public key for this private key.
+    /// Calculated by `pk = g1 * sk`.
+    #[cfg(feature = "pairing")]
+    pub fn public_key(&self) -> PublicKey {
+        let mut pk = G1Projective::generator();
+        pk *= self.0;
+
+        PublicKey(pk)
+    }
+
+    /// Get the public key for this private key.
+    /// Calculated by `pk = g1 * sk`.
+    #[cfg(feature = "blst")]
+    pub fn public_key(&self) -> PublicKey {
+        let mut pk = G1Affine::identity();
+
+        unsafe {
+            blst_lib::blst_sk_to_pk2_in_g1(std::ptr::null_mut(), pk.as_mut(), &self.0.into());
+        }
+
+        PublicKey(pk.into())
+    }
+
+    /// Deserialzes a private key from the field element as a decimal number.
+    pub fn from_string<T: AsRef<str>>(s: T) -> Result<Self, Error> {
+        match Scalar::from_str_vartime(s.as_ref()) {
+            Some(f) => Ok(f.into()),
+            None => Err(Error::InvalidPrivateKey),
+        }
+    }
 }
 
 impl Serialize for PrivateKey {
@@ -113,7 +188,7 @@ impl PublicKey {
     }
 
     pub fn verify<T: AsRef<[u8]>>(&self, sig: Signature, message: T) -> bool {
-        true
+        verify_messages(&sig, &[message.as_ref()], &[*self])
     }
 }
 
@@ -187,3 +262,4 @@ fn key_gen<T: AsRef<[u8]>>(data: T) -> Scalar {
 
     out.try_into().expect("invalid key generated")
 }
+
